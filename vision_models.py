@@ -920,7 +920,7 @@ def codex_helper(extended_prompt):
     if config.codex.model in ("gpt-4", "gpt-3.5-turbo"):
         if not isinstance(extended_prompt, list):
             extended_prompt = [extended_prompt]
-        responses = [openai.ChatCompletion.create(
+        responses = [openai.chat.completions.create(
                 model=config.codex.model,
                 messages=[
                     # {"role": "system", "content": "You are a helpful assistant."},
@@ -936,12 +936,12 @@ def codex_helper(extended_prompt):
                 stop=["\n\n"],
                 )
                     for prompt in extended_prompt]
-        resp = [r['choices'][0]['message']['content'].replace("execute_command(image)", "execute_command(image, my_fig, time_wait_between_lines, syntax)") for r in responses]
+        resp = [r.choices[0].message.content.replace("execute_command(image)", "execute_command(image, my_fig, time_wait_between_lines, syntax)") for r in responses]
 #         if len(resp) == 1:
 #             resp = resp[0]
     else:
         warnings.warn('OpenAI Codex is deprecated. Please use GPT-4 or GPT-3.5-turbo.')
-        response = openai.Completion.create(
+        response = openai.chat.completions.create(
             model="code-davinci-002",
             temperature=config.codex.temperature,
             prompt=extended_prompt,
@@ -954,9 +954,9 @@ def codex_helper(extended_prompt):
         )
 
         if isinstance(extended_prompt, list):
-            resp = [r['text'] for r in response['choices']]
+            resp = [r.text for r in response.choices[0]]
         else:
-            resp = response['choices'][0]['text']
+            resp = response.choices[0].text
 
     return resp
 
