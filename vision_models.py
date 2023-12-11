@@ -140,6 +140,129 @@ class DepthEstimationModel(BaseModel):
         to_return = to_return.cpu()
         return to_return  # To save: plt.imsave(path_save, prediction.cpu().numpy())
 
+class PLIPModel(BaseModel):
+    name = 'plip'
+
+    def __init__(self, gpu_number=0, version="vinid/plip"):  # @336px
+        super().__init__(gpu_number)
+
+        with HiddenPrints('PLIP'):
+            from transformers import CLIPProcessor, CLIPModel
+            model = CLIPModel.from_pretrained(version)
+            processor = CLIPProcessor.from_pretrained(version)
+            model.eval()
+            model.requires_grad_ = False
+        self.model = model.to(self.dev)
+        self.processor = processor
+        self.transform = transforms.Compose([ # CLIPProcessor handles internal transforms
+            transforms.ToTensor(),
+        ])
+    
+    @torch.no_grad()
+    def binary_score(self, image: Image, prompt, negative_categories=None):
+        # is_video = isinstance(image, torch.Tensor) and image.ndim == 4
+        # if is_video:  # video
+        #     image = torch.stack([self.transform(image[i]) for i in range(image.shape[0])], dim=0)
+        # else:
+        #     image = self.transform(image).unsqueeze(0).to(self.dev)
+
+        prompt_prefix = "photo of "
+        prompt = prompt_prefix + prompt
+
+        # if negative_categories is None:
+        #     with open('useful_lists/random_negatives.txt') as f:
+        #         negative_categories = [x.strip() for x in f.read().split()]
+        
+        # negative_categories = [prompt_prefix + x for x in negative_categories]
+        # inputs = self.processor(text=[prompt] + negative_categories, images=image, return_tensors="pt", padding=True)
+
+        inputs = self.processor(text=[prompt], images=image, return_tensors="pt", padding=True).to(self.dev)
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        res = logits_per_image.squeeze(0)[0]
+        
+        # run competition where we do a binary classification
+        # between the positive and all the negatives, then take the mean
+        # probs = (100 * logits_per_image).softmax(dim=1).squeeze(-2)
+        # if is_video:
+        #     query = probs[0, 0].unsqueeze(-1).broadcast_to(probs.shape[0], probs.shape[-1] - 1)
+        #     others = probs[..., 1:]
+        #     res = F.softmax(torch.stack([query, others], dim=-1), dim=-1)[..., 0].mean(-1)
+        # else:
+        #     probs = probs.squeeze(0)
+        #     res = F.softmax(torch.cat((probs[0].broadcast_to(1, probs.shape[0] - 1),
+        #                                probs[1:].unsqueeze(0)), dim=0), dim=0)[0].mean()
+
+        # probs = probs.squeeze(0)
+        # res = F.softmax(torch.cat((probs[0].broadcast_to(1, probs.shape[0] - 1),
+        #                             probs[1:].unsqueeze(0)), dim=0), dim=0)[0].mean()
+
+        return res
+    
+    @torch.no_grad()
+    def classify(self, image: Image, categories: list[str], return_index=True):
+        
+        # is_list = isinstance(image, list)
+        # if is_list:
+        #     assert len(image) == len(categories)
+        #     image = [self.transform(x).unsqueeze(0) for x in image]
+        #     image_clip = torch.cat(image, dim=0).to(self.dev)
+        # elif len(image.shape) == 3:
+        #     image_clip = self.transform(image).to(self.dev).unsqueeze(0)
+        # else:  # Video (process images separately)
+        #     image_clip = torch.stack([self.transform(x) for x in image], dim=0).to(self.dev)
+
+        # if len(image_clip.shape) == 3:
+        #     image_clip = image_clip.unsqueeze(0)
+
+        prompt_prefix = "photo of "
+        categories = [prompt_prefix + x for x in categories]
+        inputs = self.processor(text=categories, images=image, return_tensors="pt", padding=True).to(self.dev)
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        similarity = (100 * logits_per_image).softmax(dim=1).squeeze(-2)
+        
+        if not return_index:
+            return similarity
+        else:
+            result = torch.argmax(similarity, dim=-1)
+            if result.shape == ():
+                result = result.item()
+            return result
+        
+    @torch.no_grad()
+    def compare(self, images: list[Image], prompt, return_index=True):
+
+        prompt_prefix = "photo of "
+        prompt = prompt_prefix + prompt
+
+        inputs = self.processor(text=[prompt], images=images, return_tensors="pt", padding=True).to(self.dev)
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        similarity = (logits_per_image).softmax(dim=0).squeeze() # Only one text, so squeeze
+        
+        if not return_index:
+            return similarity
+        else:
+            result = torch.argmax(similarity, dim=-1)
+            if result.shape == ():
+                result = result.item()
+            return result
+
+    def forward(self, image, prompt, task='score', return_index=True, negative_categories=None, return_scores=False):
+        if task == 'classify':
+            categories = prompt
+            clip_sim = self.classify(image, categories, return_index=return_index)
+            out = clip_sim
+        elif task == 'score':
+            clip_score = self.binary_score(image, prompt, negative_categories=negative_categories)
+            out = clip_score
+        else:  # task == 'compare'
+            idx = self.compare(image, prompt, return_index=return_index)
+            out = idx
+        if not isinstance(out, int):
+            out = out.cpu()
+        return out
 
 class CLIPModel(BaseModel):
     name = 'clip'

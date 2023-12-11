@@ -250,6 +250,83 @@ class ImagePatch:
 
         return option_list[selected]
 
+    def _score_plip(self, category: str, negative_categories=None, model='plip') -> float:
+        """
+        Returns a binary score for the similarity between the image and the category.
+        The negative categories are used to compare to (score is relative to the scores of the negative categories).
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        """
+        if model == 'plip':
+            res = self.forward('plip', self.cropped_image, category, task='score',
+                               negative_categories=negative_categories)
+        else:
+            raise NotImplementedError
+        return res
+
+    def _detect_plip(self, category: str, thresh, negative_categories=None, model='plip') -> bool:
+        """
+        Returns True if the binary score for the similarity between the image and the category exceeds the threshold, else returns False.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        """
+        return self._score_plip(category, negative_categories, model) > thresh
+
+    def verify_property_plip(self, object_name: str, attribute: str) -> bool:
+        """Returns True if the object possesses the property, and False otherwise.
+        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+        checking whether the object possesses the property.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        attribute : str
+            A string describing the property to be checked.
+        """
+        name = f"{attribute} {object_name}"
+        negative_categories = [f"{att} {object_name}" for att in self.possible_options['attributes']]
+        return self._detect_plip(name, negative_categories=negative_categories,
+                                thresh=config.verify_property.thresh_plip, model='plip')
+
+    def best_text_match_plip(self, option_list: list[str] = None, prefix: str = None) -> str:
+        """Returns the string that best matches the image. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        option_list : str
+            A list with the names of the different options
+        prefix : str
+            A string with the prefixes to append to the options
+        """
+        option_list_to_use = option_list
+        if prefix is not None:
+            option_list_to_use = [prefix + " " + option for option in option_list]
+
+        model_name = config.plip_model
+        image = self.cropped_image
+        text = option_list_to_use
+        selected = self.forward(model_name, image, text, task='classify')
+        return option_list[selected]
+
+    def best_image_match_plip(self, option_list: list[ImagePatch] = None, prompt: str = None) -> ImagePatch:
+        """Returns the image that best matches the string. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        option_list : ImagePatch
+            A list with the images of the different options
+        prompt : str
+            A string to match against different images
+        """
+
+        model_name = config.plip_model
+        images = option_list
+        text = prompt
+        selected = self.forward(model_name, images, text, task='compare')
+        return option_list[selected]
+
     def simple_query(self, question: str):
         """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
         to "What is this?". The questions are about basic perception, and are not meant to be used for complex reasoning
