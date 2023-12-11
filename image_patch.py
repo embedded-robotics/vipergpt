@@ -310,23 +310,6 @@ class ImagePatch:
         selected = self.forward(model_name, image, text, task='classify')
         return option_list[selected]
 
-    def best_image_match_plip(self, option_list: list[ImagePatch] = None, prompt: str = None) -> ImagePatch:
-        """Returns the image that best matches the string. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-        non-pathology images.
-        Parameters
-        -------
-        option_list : ImagePatch
-            A list with the images of the different options
-        prompt : str
-            A string to match against different images
-        """
-
-        model_name = config.plip_model
-        images = option_list
-        text = prompt
-        selected = self.forward(model_name, images, text, task='compare')
-        return option_list[selected]
-
     def simple_query(self, question: str):
         """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
         to "What is this?". The questions are about basic perception, and are not meant to be used for complex reasoning
@@ -416,6 +399,23 @@ class ImagePatch:
     def __repr__(self):
         return "ImagePatch({}, {}, {}, {})".format(self.left, self.lower, self.right, self.upper)
 
+
+def best_image_match_plip(self, option_list: list[ImagePatch] = None, prompt: str = None) -> ImagePatch:
+    """Returns the image that best matches the string. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+    non-pathology images.
+    Parameters
+    -------
+    option_list : ImagePatch
+        A list with the images of the different options
+    prompt : str
+        A string to match against different images
+    """
+
+    model_name = config.plip_model
+    images = option_list
+    text = prompt
+    selected = self.forward(model_name, images, text, task='compare')
+    return option_list[selected]
 
 def best_image_match(list_patches: list[ImagePatch], content: List[str], return_index: bool = False) -> \
         Union[ImagePatch, None]:

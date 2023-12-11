@@ -36,7 +36,7 @@ verify_property:                                    # Parameters for verify_prop
     thresh_clip: 0.6
     thresh_tcl: 0.25
     thresh_xvlm: 0.6
-    thresh_plip: 0.6
+    thresh_plip: 25
 
 best_match_model: xvlm                              # Which model to use for best_[image, text]_match
 
