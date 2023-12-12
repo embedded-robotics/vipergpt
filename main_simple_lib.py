@@ -245,10 +245,10 @@ def show_all(lineno, value, valuename, fig=None, usefig=True, disp=True, console
 def load_image(path):
     if path.startswith("http://") or path.startswith("https://"):
         image = Image.open(requests.get(path, stream=True).raw).convert('RGB')
-        image = transforms.ToTensor()(image)
+        # image = transforms.ToTensor()(image)
     else:
         image = Image.open(path)
-        image = transforms.ToTensor()(image)
+        # image = transforms.ToTensor()(image)
     return image
 
 
@@ -309,7 +309,7 @@ def execute_code(code, im, show_intermediate_steps=True):
 
 
 def show_single_image(im):
-    im = Image.fromarray((im.detach().cpu().numpy().transpose(1, 2, 0) * 255).astype("uint8"))
+    # im = Image.fromarray((im.detach().cpu().numpy().transpose(1, 2, 0) * 255).astype("uint8"))
     im.copy()
     im.thumbnail((400, 400))
     display(im)
