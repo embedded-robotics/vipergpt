@@ -76,7 +76,8 @@ class ImagePatch:
         """
 
         if isinstance(image, Image.Image):
-            image = transforms.ToTensor()(image)
+            # image = transforms.ToTensor()(image)
+            image = image
         elif isinstance(image, np.ndarray):
             image = torch.tensor(image).permute(1, 2, 0)
         elif isinstance(image, torch.Tensor) and image.dtype == torch.uint8:
@@ -86,17 +87,25 @@ class ImagePatch:
             self.cropped_image = image
             self.left = 0
             self.lower = 0
-            self.right = image.shape[2]  # width
-            self.upper = image.shape[1]  # height
+            if isinstance(image, Image.Image):
+                self.right = image.size[0]  # width
+                self.upper = image.size[1]  # height
+            else:
+                self.right = image.shape[2]  # width
+                self.upper = image.shape[1]  # height
         else:
             self.cropped_image = image[:, image.shape[1]-upper:image.shape[1]-lower, left:right]
             self.left = left + parent_left
             self.upper = upper + parent_lower
             self.right = right + parent_left
             self.lower = lower + parent_lower
-
-        self.height = self.cropped_image.shape[1]
-        self.width = self.cropped_image.shape[2]
+            
+        if isinstance(image, Image.Image):
+            self.height = self.cropped_image.size[1]
+            self.width = self.cropped_image.size[0]            
+        else:
+            self.height = self.cropped_image.shape[1]
+            self.width = self.cropped_image.shape[2]
 
         self.cache = {}
         self.queues = (None, None) if queues is None else queues
@@ -105,10 +114,14 @@ class ImagePatch:
 
         self.horizontal_center = (self.left + self.right) / 2
         self.vertical_center = (self.lower + self.upper) / 2
-
-        if self.cropped_image.shape[1] == 0 or self.cropped_image.shape[2] == 0:
-            raise Exception("ImagePatch has no area")
-
+        
+        if isinstance(image, Image.Image):
+            if self.cropped_image.size[0] == 0 or self.cropped_image.size[0] == 0:
+                raise Exception("ImagePatch has no area")
+        else:
+            if self.cropped_image.shape[1] == 0 or self.cropped_image.shape[2] == 0:
+                raise Exception("ImagePatch has no area")
+            
         self.possible_options = load_json('./useful_lists/possible_options.json')
 
     def forward(self, model_name, *args, **kwargs):
@@ -400,22 +413,21 @@ class ImagePatch:
         return "ImagePatch({}, {}, {}, {})".format(self.left, self.lower, self.right, self.upper)
 
 
-def best_image_match_plip(self, option_list: list[ImagePatch] = None, prompt: str = None) -> ImagePatch:
+def best_image_match_plip(patch_list: list[ImagePatch], prompt: str) -> ImagePatch:
     """Returns the image that best matches the string. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
     non-pathology images.
     Parameters
     -------
-    option_list : ImagePatch
+    patch_list : ImagePatch
         A list with the images of the different options
     prompt : str
         A string to match against different images
     """
 
     model_name = config.plip_model
-    images = option_list
-    text = prompt
-    selected = self.forward(model_name, images, text, task='compare')
-    return option_list[selected]
+    selected = patch_list[0].forward(model_name, [p.cropped_image for p in patch_list], prompt, task='compare')
+    return patch_list[selected]
+
 
 def best_image_match(list_patches: list[ImagePatch], content: List[str], return_index: bool = False) -> \
         Union[ImagePatch, None]:

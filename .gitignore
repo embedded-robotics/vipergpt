@@ -216,5 +216,3 @@ scratchwork/
 blip2_runner.py
 LAVIS/
 pretrained_models/
-plip_test_data/
-plip_testing.ipynb
