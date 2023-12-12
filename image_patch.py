@@ -134,64 +134,64 @@ class ImagePatch:
         else:
             return self.parent_img_patch.original_image
 
-    def find(self, object_name: str) -> list[ImagePatch]:
-        """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found.
-        Otherwise, returns an empty list.
-        Parameters
-        ----------
-        object_name : str
-            the name of the object to be found
+    # def find(self, object_name: str) -> list[ImagePatch]:
+    #     """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found.
+    #     Otherwise, returns an empty list.
+    #     Parameters
+    #     ----------
+    #     object_name : str
+    #         the name of the object to be found
 
-        Returns
-        -------
-        List[ImagePatch]
-            a list of ImagePatch objects matching object_name contained in the crop
-        """
-        if object_name in ["object", "objects"]:
-            all_object_coordinates = self.forward('maskrcnn', self.cropped_image)[0]
-        else:
+    #     Returns
+    #     -------
+    #     List[ImagePatch]
+    #         a list of ImagePatch objects matching object_name contained in the crop
+    #     """
+    #     if object_name in ["object", "objects"]:
+    #         all_object_coordinates = self.forward('maskrcnn', self.cropped_image)[0]
+    #     else:
 
-            if object_name == 'person':
-                object_name = 'people'  # GLIP does better at people than person
+    #         if object_name == 'person':
+    #             object_name = 'people'  # GLIP does better at people than person
 
-            all_object_coordinates = self.forward('glip', self.cropped_image, object_name)
-        if len(all_object_coordinates) == 0:
-            return []
+    #         all_object_coordinates = self.forward('glip', self.cropped_image, object_name)
+    #     if len(all_object_coordinates) == 0:
+    #         return []
 
-        threshold = config.ratio_box_area_to_image_area
-        if threshold > 0:
-            area_im = self.width * self.height
-            all_areas = torch.tensor([(coord[2]-coord[0]) * (coord[3]-coord[1]) / area_im
-                                      for coord in all_object_coordinates])
-            mask = all_areas > threshold
-            # if not mask.any():
-            #     mask = all_areas == all_areas.max()  # At least return one element
-            all_object_coordinates = all_object_coordinates[mask]
+    #     threshold = config.ratio_box_area_to_image_area
+    #     if threshold > 0:
+    #         area_im = self.width * self.height
+    #         all_areas = torch.tensor([(coord[2]-coord[0]) * (coord[3]-coord[1]) / area_im
+    #                                   for coord in all_object_coordinates])
+    #         mask = all_areas > threshold
+    #         # if not mask.any():
+    #         #     mask = all_areas == all_areas.max()  # At least return one element
+    #         all_object_coordinates = all_object_coordinates[mask]
 
 
-        return [self.crop(*coordinates) for coordinates in all_object_coordinates]
+    #     return [self.crop(*coordinates) for coordinates in all_object_coordinates]
 
-    def exists(self, object_name) -> bool:
-        """Returns True if the object specified by object_name is found in the image, and False otherwise.
-        Parameters
-        -------
-        object_name : str
-            A string describing the name of the object to be found in the image.
-        """
-        if object_name.isdigit() or object_name.lower().startswith("number"):
-            object_name = object_name.lower().replace("number", "").strip()
+    # def exists(self, object_name) -> bool:
+    #     """Returns True if the object specified by object_name is found in the image, and False otherwise.
+    #     Parameters
+    #     -------
+    #     object_name : str
+    #         A string describing the name of the object to be found in the image.
+    #     """
+    #     if object_name.isdigit() or object_name.lower().startswith("number"):
+    #         object_name = object_name.lower().replace("number", "").strip()
 
-            object_name = w2n.word_to_num(object_name)
-            answer = self.simple_query("What number is written in the image (in digits)?")
-            return w2n.word_to_num(answer) == object_name
+    #         object_name = w2n.word_to_num(object_name)
+    #         answer = self.simple_query("What number is written in the image (in digits)?")
+    #         return w2n.word_to_num(answer) == object_name
 
-        patches = self.find(object_name)
+    #     patches = self.find(object_name)
 
-        filtered_patches = []
-        for patch in patches:
-            if "yes" in patch.simple_query(f"Is this a {object_name}?"):
-                filtered_patches.append(patch)
-        return len(filtered_patches) > 0
+    #     filtered_patches = []
+    #     for patch in patches:
+    #         if "yes" in patch.simple_query(f"Is this a {object_name}?"):
+    #             filtered_patches.append(patch)
+    #     return len(filtered_patches) > 0
 
     def _score(self, category: str, negative_categories=None, model='clip') -> float:
         """
@@ -277,13 +277,13 @@ class ImagePatch:
             raise NotImplementedError
         return res
 
-    def _detect_plip(self, category: str, thresh, negative_categories=None, model='plip') -> bool:
+    def find_plip(self, object: str, thresh, negative_categories=None, model='plip') -> bool:
         """
-        Returns True if the binary score for the similarity between the image and the category exceeds the threshold, else returns False.
+        Returns True if the object is present in the image, else return False.
         This calls a specialized model for pathology images. It is not a general purpose model and will fail on
         non-pathology images.
         """
-        return self._score_plip(category, negative_categories, model) > thresh
+        return bool(self._score_plip(object, negative_categories, model) > thresh)
 
     def verify_property_plip(self, object_name: str, attribute: str) -> bool:
         """Returns True if the object possesses the property, and False otherwise.
@@ -300,7 +300,7 @@ class ImagePatch:
         """
         name = f"{attribute} {object_name}"
         negative_categories = [f"{att} {object_name}" for att in self.possible_options['attributes']]
-        return self._detect_plip(name, negative_categories=negative_categories,
+        return self.find_plip(name, negative_categories=negative_categories,
                                 thresh=config.verify_property.thresh_plip, model='plip')
 
     def best_text_match_plip(self, option_list: list[str] = None, prefix: str = None) -> str:
@@ -419,7 +419,7 @@ def best_image_match_plip(patch_list: list[ImagePatch], prompt: str) -> ImagePat
     Parameters
     -------
     patch_list : ImagePatch
-        A list with the images of the different options
+        a list of ImagePatch objects to be compared against the prompt
     prompt : str
         A string to match against different images
     """
