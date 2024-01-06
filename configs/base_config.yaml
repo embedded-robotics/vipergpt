@@ -29,7 +29,7 @@ detect_thresholds:                                  # Thresholds for the models 
     maskrcnn: 0.8
     owlvit: 0.1
 ratio_box_area_to_image_area: 0.0                   # Any detected patch under this size will not be returned
-crop_larger_margin: True                            # Increase size of crop by 10% to include more context
+crop_larger_margin: False                            # Increase size of crop by 10% to include more context
 
 verify_property:                                    # Parameters for verify_property
     model: xvlm                                     # Model to use for verify_property

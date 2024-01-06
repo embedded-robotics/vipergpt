@@ -229,7 +229,38 @@ class PLIPModel(BaseModel):
             if result.shape == ():
                 result = result.item()
             return result
+
+    @torch.no_grad()
+    def find_object_coordinates(self, image: Image, prompt):
+        prompt_prefix = "photo of "
+        object_name =  prompt_prefix + prompt
         
+        # Calculating the image width and height to form the patches
+        img_width = image.size[0]
+        img_height = image.size[1]
+        
+        # Preparing the patch list of the image width
+        img_width_list = range(0, img_width, 256)
+        img_width_list = list(img_width_list)
+        img_width_list.append(img_width)
+        
+        # Preparing the patch list of the image height
+        img_height_list = range(0, img_height, 256)
+        img_height_list = list(img_height_list)
+        img_height_list.append(img_height)
+        
+        image_coordinate_list = []
+        for i in range(0, len(img_height_list) - 1):
+            for j in range(0, len(img_width_list) - 1):
+                image_crop = image.crop((img_width_list[j], img_height_list[i], img_width_list[j+1], img_height_list[i+1]))
+                inputs = self.processor(text=object_name, images=image_crop, return_tensors="pt", padding=True).to(self.dev)
+                outputs = self.model(**inputs)
+                logits_per_image = outputs.logits_per_image
+                if logits_per_image.squeeze(0)[0] > config.verify_property.thresh_plip:
+                    image_coordinate_list.append((img_width_list[j], img_height_list[i], img_width_list[j+1], img_height_list[i+1]))
+        
+        return image_coordinate_list
+
     @torch.no_grad()
     def compare(self, images: list[Image], prompt, return_index=True):
 
@@ -250,7 +281,11 @@ class PLIPModel(BaseModel):
             return result
 
     def forward(self, image, prompt, task='score', return_index=True, negative_categories=None, return_scores=False):
-        if task == 'classify':
+        if task == 'find':
+            object_name = prompt
+            object_patch_coordinates = self.find_object_coordinates(image, object_name)
+            out = object_patch_coordinates
+        elif task == 'classify':
             categories = prompt
             clip_sim = self.classify(image, categories, return_index=return_index)
             out = clip_sim
@@ -260,7 +295,7 @@ class PLIPModel(BaseModel):
         else:  # task == 'compare'
             idx = self.compare(image, prompt, return_index=return_index)
             out = idx
-        if not isinstance(out, int):
+        if not isinstance(out, int) and not isinstance(out, list):
             out = out.cpu()
         return out
 
