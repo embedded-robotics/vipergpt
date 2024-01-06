@@ -313,23 +313,23 @@ class ImagePatch:
             raise NotImplementedError
         return res
 
-    # def verify_property_plip(self, object_name: str, attribute: str) -> bool:
-    #     """Returns True if the object possesses the property, and False otherwise.
-    #     Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
-    #     checking whether the object possesses the property.
-    #     This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-    #     non-pathology images.
-    #     Parameters
-    #     -------
-    #     object_name : str
-    #         A string describing the name of the object to be found in the image.
-    #     attribute : str
-    #         A string describing the property to be checked.
-    #     """
-    #     name = f"{attribute} {object_name}"
-    #     negative_categories = [f"{att} {object_name}" for att in self.possible_options['attributes']]
-    #     return self.find_plip(name, negative_categories=negative_categories,
-    #                             thresh=config.verify_property.thresh_plip, model='plip')
+    def verify_property_plip(self, object_name: str, attribute: str) -> bool:
+        """
+        Returns True if the object possesses the property, and False otherwise.
+        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+        checking whether the object possesses the property.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        attribute : str
+            A string describing the property to be checked.
+        """
+        attribute_name = f"{attribute} {object_name}"
+
+        return self._score_plip(attribute_name, model='plip') > config.verify_property.thresh_plip
 
     def best_text_match_plip(self, option_list: list[str] = None, prefix: str = None) -> str:
         """Returns the string that best matches the image. This calls a specialized model for pathology images. It is not a general purpose model and will fail on

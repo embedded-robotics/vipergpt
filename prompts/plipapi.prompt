@@ -11,13 +11,15 @@ class ImagePatch:
 
     Methods
     -------
-    find_plip(object_name: str)->bool
-        Returns True if the object matching the object_name is present in the image, else return False.
-        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-        non-pathology images.
+    find_plip(object_name: str)->list[ImagePatch]
+        Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
+    exists_plip(object_name: str)->bool
+        Returns True if the object specified by object_name is found in the image, and False otherwise.
+    verify_property_plip(object_name, attribute)->bool
+        Returns True if the object possesses the property, and False otherwise. Differs from 'exists' in that it presupposes the existence of the object
+        specified by object_name, instead checking whether the object possesses the property specified by attribute
     best_text_match_plip(option_list: List[str], prefix: str)->str
-        Returns the string that best matches the image. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-        non-pathology images.
+        Returns the string that best matches the image. This calls a specialized model for pathology images.
     simple_query(question: str=None)->str
         Returns the answer to a basic question asked about the image. If no question is provided, returns the answer to "What is this?".
     llm_query(question: str, long_answer: bool)->str
@@ -48,58 +50,106 @@ class ImagePatch:
                 self.right = image.shape[2]  # width
                 self.upper = image.shape[1]  # height
         else:
-            self.cropped_image = image[:, lower:upper, left:right]
-            self.left = left
-            self.upper = upper
-            self.right = right
-            self.lower = lower
-        
+            if isinstance(image, Image.Image):
+                self.cropped_image = image.crop((left, upper, right, lower))
+            else:
+                self.cropped_image = image[:, image.shape[1]-upper:image.shape[1]-lower, left:right]
+            self.left = left + parent_left
+            self.upper = upper + parent_lower
+            self.right = right + parent_left
+            self.lower = lower + parent_lower
+            
         if isinstance(image, Image.Image):
-            self.width = self.cropped_image.size[0]
             self.height = self.cropped_image.size[1]
+            self.width = self.cropped_image.size[0]            
         else:
-            self.width = self.cropped_image.shape[2]
             self.height = self.cropped_image.shape[1]
+            self.width = self.cropped_image.shape[2]
 
         self.horizontal_center = (self.left + self.right) / 2
         self.vertical_center = (self.lower + self.upper) / 2
 
-    def find_plip(self, object_name: str) -> bool:
-        """Returns True if the object indicated by object_name is present in the image, else return False.
-        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-        non-pathology images.
+    def find_plip(self, object_name: str) -> list[ImagePatch]:
+        """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
+    
         Parameters
         ----------
         object_name : str
-            A string describing the name of the object to be found in the image.
+            the name of the object to be found
+
+        Returns
+        -------
+        List[ImagePatch]
+            a list of ImagePatch objects matching object_name contained in the crop
 
         Examples
         --------
-        >>> # is foo present in the image?
-        >>> def execute_command(image) -> bool:
+        >>> # return the foo patches
+        >>> def execute_command(image) -> List[ImagePatch]:
         >>>     image_patch = ImagePatch(image)
-        >>>     is_foo_available = image_patch.find("foo")
-        >>>     return is_foo_available
+        >>>     foo_patches = image_patch.find_plip("foo")
+        >>>     return foo_patches
         """
-        return find_in_image(self.cropped_image, object_name)
+        return find_plip(self.cropped_image, object_name)
+
+    def exists_plip(self, object_name: str) -> bool:
+        """Returns True if the object specified by object_name is found in the image, and False otherwise.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        
+        Examples
+        -------
+        >>> # Are there both foos and garply bars in the photo?
+        >>> def execute_command(image)->str:
+        >>>     image_patch = ImagePatch(image)
+        >>>     is_foo = image_patch.exists_plip("foo")
+        >>>     is_garply_bar = image_patch.exists_plip("garply bar")
+        >>>     return bool_to_yesno(is_foo and is_garply_bar)
+        """
+        return exists_plip(self.cropped_image, object_name)
+
+    def verify_property_plip(self, object_name: str, visual_property: str) -> bool:
+        """
+        Returns True if the object possesses the property, and False otherwise.
+        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+        checking whether the object possesses the property.
+
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        visual_property : str
+            A string describing the visual property to be checked within the object
+
+        Examples
+        -------
+        >>> # Are the arteries swollen?
+        >>> def execute_command(image) -> str:
+        >>>     image_patch = ImagePatch(image)
+        >>>     arteries_patches = image_patch.find_plip("arteries")
+        >>>     # Question assumes that arteries are present in each patch
+        >>>     return bool_to_yesno(arteries_patches[0].verify_property_plip("arteries", "swollen"))
+        """
+        return verify_property_plip(self.cropped_image, object_name, visual_property)
 
     def best_text_match_plip(self, option_list: List[str]) -> str:
-        """Returns the string that best matches the image. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
-        non-pathology images.
+        """Returns the string that best matches the image. 
         Parameters
         -------
         option_list : str
             A list with the names of the different options
-        prefix : str
-            A string with the prefixes to append to the options
 
         Examples
         -------
         >>> # Is the foo gold or white?
         >>> def execute_command(image)->str:
         >>>     image_patch = ImagePatch(image)
+        >>>     foo_patches = image_patch.find_plip("foo")
         >>>     # Question assumes one foo patch
-        >>>     return image_patch.best_text_match_plip(["gold foo", "white foo"])
+        >>>     return foo_patches[0].best_text_match_plip(["gold", "white"])
         """
         return best_text_match_plip(self.cropped_image, option_list)
 
@@ -118,22 +168,22 @@ class ImagePatch:
         >>> # Which kind of baz is not fredding?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     baz_patches = image_patch.find("baz")
+        >>>     baz_patches = image_patch.find_plip("baz")
         >>>     for baz_patch in baz_patches:
-        >>>         if not baz_patch.verify_property("baz", "fredding"):
+        >>>         if not baz_patch.verify_property_plip("baz", "fredding"):
         >>>             return baz_patch.simple_query("What is this baz?")
 
         >>> # What color is the foo?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     foo_patches = image_patch.find("foo")
+        >>>     foo_patches = image_patch.find_plip("foo")
         >>>     foo_patch = foo_patches[0]
         >>>     return foo_patch.simple_query("What is the color?")
 
         >>> # Is the second bar from the left quuxy?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     bar_patches = image_patch.find("bar")
+        >>>     bar_patches = image_patch.find_plip("bar")
         >>>     bar_patches.sort(key=lambda x: x.horizontal_center)
         >>>     bar_patch = bar_patches[1]
         >>>     return bar_patch.simple_query("Is the bar quuxy?")
@@ -168,9 +218,9 @@ class ImagePatch:
         >>> # black foo on top of the qux
         >>> def execute_command(image) -> ImagePatch:
         >>>     image_patch = ImagePatch(image)
-        >>>     qux_patches = image_patch.find("qux")
+        >>>     qux_patches = image_patch.find_plip("qux")
         >>>     qux_patch = qux_patches[0]
-        >>>     foo_patches = image_patch.find("black foo")
+        >>>     foo_patches = image_patch.find_plip("black foo")
         >>>     for foo in foo_patches:
         >>>         if foo.vertical_center > qux_patch.vertical_center
         >>>             return foo
@@ -193,7 +243,7 @@ class ImagePatch:
         >>> # What is the city this building is in?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     building_patches = image_patch.find("building")
+        >>>     building_patches = image_patch.find_plip("building")
         >>>     building_patch = building_patches[0]
         >>>     building_name = building_patch.simple_query("What is the name of the building?")
         >>>     return building_patch.llm_query(f"What city is {building_name} in?", long_answer=False)
@@ -201,7 +251,7 @@ class ImagePatch:
         >>> # Who invented this object?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     object_patches = image_patch.find("object")
+        >>>     object_patches = image_patch.find_plip("object")
         >>>     object_patch = object_patches[0]
         >>>     object_name = object_patch.simple_query("What is the name of the object?")
         >>>     return object_patch.llm_query(f"Who invented {object_name}?", long_answer=False)
@@ -209,7 +259,7 @@ class ImagePatch:
         >>> # Explain the history behind this object.
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     object_patches = image_patch.find("object")
+        >>>     object_patches = image_patch.find_plip("object")
         >>>     object_patch = object_patches[0]
         >>>     object_name = object_patch.simple_query("What is the name of the object?")
         >>>     return object_patch.llm_query(f"What is the history behind {object_name}?", long_answer=True)
@@ -217,22 +267,19 @@ class ImagePatch:
         return llm_query(question, long_answer)
 
 
-def best_image_match(list_patches: List[ImagePatch], content: List[str], return_index=False) -> Union[ImagePatch, int]:
+def best_image_match_plip(patch_list: list[ImagePatch], content: str) -> ImagePatch:
     """Returns the patch most likely to contain the content.
     Parameters
     ----------
     list_patches : List[ImagePatch]
-    content : List[str]
+    content : str
         the object of interest
-    return_index : bool
-        if True, returns the index of the patch most likely to contain the object
 
     Returns
     -------
-    int
-        Patch most likely to contain the object
+    ImagePatch most likely to contain the object
     """
-    return best_image_match(list_patches, content, return_index)
+    return best_image_match_plip(list_patches, content)
 
 
 def distance(patch_a: ImagePatch, patch_b: ImagePatch) -> float:
@@ -250,8 +297,8 @@ def distance(patch_a: ImagePatch, patch_b: ImagePatch) -> float:
     # Return the qux that is closest to the foo
     >>> def execute_command(image):
     >>>     image_patch = ImagePatch(image)
-    >>>     qux_patches = image_patch.find('qux')
-    >>>     foo_patches = image_patch.find('foo')
+    >>>     qux_patches = image_patch.find_plip('qux')
+    >>>     foo_patches = image_patch.find_plip('foo')
     >>>     foo_patch = foo_patches[0]
     >>>     qux_patches.sort(key=lambda x: distance(x, foo_patch))
     >>>     return qux_patches[0]
