@@ -131,7 +131,8 @@ class ImagePatch:
         >>>     image_patch = ImagePatch(image)
         >>>     arteries_patches = image_patch.find_plip("arteries")
         >>>     # Question assumes that arteries are present in each patch
-        >>>     return bool_to_yesno(arteries_patches[0].verify_property_plip("arteries", "swollen"))
+        >>>     filtered_patch = best_image_match_plip(arteries_patches, "arteries")
+        >>>     return bool_to_yesno(filtered_patch.verify_property_plip("arteries", "swollen"))
         """
         return verify_property_plip(self.cropped_image, object_name, visual_property)
 
@@ -148,8 +149,9 @@ class ImagePatch:
         >>> def execute_command(image)->str:
         >>>     image_patch = ImagePatch(image)
         >>>     foo_patches = image_patch.find_plip("foo")
-        >>>     # Question assumes one foo patch
-        >>>     return foo_patches[0].best_text_match_plip(["gold", "white"])
+        >>>     # Question assumes atleast one foo patch
+        >>>     filtered_patch = best_image_match_plip(foo_patches, "foo")
+        >>>     return filtered_patch.best_text_match_plip(["gold", "white"])
         """
         return best_text_match_plip(self.cropped_image, option_list)
 
@@ -177,7 +179,7 @@ class ImagePatch:
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
         >>>     foo_patches = image_patch.find_plip("foo")
-        >>>     foo_patch = foo_patches[0]
+        >>>     foo_patch = best_image_match_plip(foo_patches, "foo")
         >>>     return foo_patch.simple_query("What is the color?")
 
         >>> # Is the second bar from the left quuxy?
@@ -219,7 +221,7 @@ class ImagePatch:
         >>> def execute_command(image) -> ImagePatch:
         >>>     image_patch = ImagePatch(image)
         >>>     qux_patches = image_patch.find_plip("qux")
-        >>>     qux_patch = qux_patches[0]
+        >>>     qux_patch = best_image_match_plip(qux_patches, "foo")
         >>>     foo_patches = image_patch.find_plip("black foo")
         >>>     for foo in foo_patches:
         >>>         if foo.vertical_center > qux_patch.vertical_center
@@ -244,7 +246,7 @@ class ImagePatch:
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
         >>>     building_patches = image_patch.find_plip("building")
-        >>>     building_patch = building_patches[0]
+        >>>     building_patch = best_image_match_plip(building_patches, "building")
         >>>     building_name = building_patch.simple_query("What is the name of the building?")
         >>>     return building_patch.llm_query(f"What city is {building_name} in?", long_answer=False)
 
@@ -252,7 +254,7 @@ class ImagePatch:
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
         >>>     object_patches = image_patch.find_plip("object")
-        >>>     object_patch = object_patches[0]
+        >>>     object_patch = best_image_match_plip(object_patches, "building")
         >>>     object_name = object_patch.simple_query("What is the name of the object?")
         >>>     return object_patch.llm_query(f"Who invented {object_name}?", long_answer=False)
 
@@ -260,7 +262,7 @@ class ImagePatch:
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
         >>>     object_patches = image_patch.find_plip("object")
-        >>>     object_patch = object_patches[0]
+        >>>     object_patch = best_image_match_plip(object_patches, "building")
         >>>     object_name = object_patch.simple_query("What is the name of the object?")
         >>>     return object_patch.llm_query(f"What is the history behind {object_name}?", long_answer=True)
         '''
@@ -299,7 +301,7 @@ def distance(patch_a: ImagePatch, patch_b: ImagePatch) -> float:
     >>>     image_patch = ImagePatch(image)
     >>>     qux_patches = image_patch.find_plip('qux')
     >>>     foo_patches = image_patch.find_plip('foo')
-    >>>     foo_patch = foo_patches[0]
+    >>>     foo_patch = best_image_match_plip(foo_patches, "building")
     >>>     qux_patches.sort(key=lambda x: distance(x, foo_patch))
     >>>     return qux_patches[0]
     """
@@ -317,10 +319,11 @@ def coerce_to_numeric(string):
     """
     return coerce_to_numeric(string)
 
-Write a function using Python and the ImagePatch class (above) that could be executed to provide an answer to the query. 
+Write a function using Python and the ImagePatch class (above) that could be executed to provide an answer to the query.
 
 Consider the following guidelines:
 - Use base Python (comparison, sorting) for basic logical operations, left/right/up/down, math, etc.
 - Use the llm_query function to access external information and answer informational questions not concerning the image.
+- The function should take image from ImagePatch class into account while answering the query
 
 Query: INSERT_QUERY_HERE
