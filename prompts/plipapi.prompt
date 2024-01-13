@@ -58,10 +58,10 @@ class ImagePatch:
             self.upper = upper + parent_lower
             self.right = right + parent_left
             self.lower = lower + parent_lower
-            
+
         if isinstance(image, Image.Image):
             self.height = self.cropped_image.size[1]
-            self.width = self.cropped_image.size[0]            
+            self.width = self.cropped_image.size[0]
         else:
             self.height = self.cropped_image.shape[1]
             self.width = self.cropped_image.shape[2]
@@ -72,7 +72,7 @@ class ImagePatch:
     def find_plip(self, object_name: str) -> list[ImagePatch]:
         """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
         This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
-    
+
         Parameters
         ----------
         object_name : str
@@ -85,11 +85,24 @@ class ImagePatch:
 
         Examples
         --------
-        >>> # return the foo patches
+        >>> # return the cancer patches
         >>> def execute_command(image) -> List[ImagePatch]:
         >>>     image_patch = ImagePatch(image)
-        >>>     foo_patches = image_patch.find_plip("foo")
-        >>>     return foo_patches
+        >>>     cancer_patches = image_patch.find_plip("cancer")
+        >>>     return cancer_patches
+
+        >>> # Do the histone subunits represent foci of fat necrosis with calcium soap formation at sites of lipid breakdown in the mesentery?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     histone_patches = image_patch.find_plip("histone subunits")
+        >>>     fat_necrosis_patches = image_patch.find_plip("foci of fat necrosis")
+        >>>     calcium_soap_patches = image_patch.find_plip("calcium soap formation")
+        >>>     lipid_breakdown_patches = image_patch.find_plip("sites of lipid breakdown")
+        >>>
+        >>>     if histone_patches and fat_necrosis_patches and calcium_soap_patches and lipid_breakdown_patches:
+        >>>         return "Yes"
+        >>>     else:
+        >>>         return "No"
         """
         return find_plip(self.cropped_image, object_name)
 
@@ -99,15 +112,15 @@ class ImagePatch:
         -------
         object_name : str
             A string describing the name of the object to be found in the image.
-        
+
         Examples
         -------
-        >>> # Are there both foos and garply bars in the photo?
+        >>> # Are dilated and congested sinuses present in the photo?
         >>> def execute_command(image)->str:
         >>>     image_patch = ImagePatch(image)
-        >>>     is_foo = image_patch.exists_plip("foo")
-        >>>     is_garply_bar = image_patch.exists_plip("garply bar")
-        >>>     return bool_to_yesno(is_foo and is_garply_bar)
+        >>>     is_dilated = image_patch.exists_plip("dilated sinuses")
+        >>>     is_congested = image_patch.exists_plip("congested sinuses")
+        >>>     return bool_to_yesno(is_dilated and is_congested)
         """
         return exists_plip(self.cropped_image, object_name)
 
@@ -133,11 +146,38 @@ class ImagePatch:
         >>>     # Question assumes that arteries are present in each patch
         >>>     filtered_patch = best_image_match_plip(arteries_patches, "arteries")
         >>>     return bool_to_yesno(filtered_patch.verify_property_plip("arteries", "swollen"))
+
+        >>> # Is the cellular adaptation depicted here hypertrophy?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     adaptation_patches = image_patch.find_plip("cellular adaptation")
+        >>>     adaptation_patch = best_image_match_plip(adaptation_patches, "cellular adaptation")
+        >>>         return bool_to_yesno(adaptation_patch.verify_property_plip("cellular adaptation", "hypertrophy"))
+
+        >>> # Is the irreversible injury ischemic coagulative necrosis?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     necrosis_patches = image_patch.find_plip("necrosis")
+        >>>     necrosis_patch = best_image_match_plip(necrosis_patches, "necrosis")
+        >>>     return bool_to_yesno(necrosis_patch.verify_property_plip("necrosis", "ischemic coagulative necrosis"))
+
+        >>> # Does reversibly injured myocardium show functional effects without any gross or light microscopic changes, or
+        >>> reversible changes such as cellular swelling and fatty change?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     myocardium_patches = image_patch.find_plip("reversibly injured myocardium")
+        >>>     if len(myocardium_patches) == 0:
+        >>>     return "No"
+
+        >>>     for myocardium_patch in myocardium_patches:
+        >>>         if myocardium_patch.verify_property_plip("reversibly injured myocardium", "functional effects"):
+        >>>             return "Yes"
+        >>>     return "No"
         """
         return verify_property_plip(self.cropped_image, object_name, visual_property)
 
     def best_text_match_plip(self, option_list: List[str]) -> str:
-        """Returns the string that best matches the image. 
+        """Returns the string that best matches the image.
         Parameters
         -------
         option_list : str
@@ -226,6 +266,17 @@ class ImagePatch:
         >>>     for foo in foo_patches:
         >>>         if foo.vertical_center > qux_patch.vertical_center
         >>>             return foo
+
+        >>> # Is there an infarct in the brain hypertrophy?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     infarct_patches = image_patch.find_plip("infarct")
+        >>>     hypertrophy_patches = image_patch.find_plip("brain hypertrophy")
+        >>>     for infarct_patch in infarct_patches:
+        >>>         for hypertrophy_patch in hypertrophy_patches:
+        >>>             if infarct_patch.overlaps_with(hypertrophy_patch.left, hypertrophy_patch.lower, hypertrophy_patch.right, hypertrophy_patch.upper):
+        >>>                 return "yes"
+        >>>     return "no"
         """
         return self.left <= right and self.right >= left and self.lower <= upper and self.upper >= lower
 
@@ -280,6 +331,33 @@ def best_image_match_plip(patch_list: list[ImagePatch], content: str) -> ImagePa
     Returns
     -------
     ImagePatch most likely to contain the object
+
+    Examples
+    --------
+    >>> # Is the cellular adaptation depicted here hypertrophy?
+    >>> def execute_command(image):
+    >>>     image_patch = ImagePatch(image)
+    >>>     adaptation_patches = image_patch.find_plip("cellular adaptation")
+    >>>     adaptation_patch = best_image_match_plip(adaptation_patches, "cellular adaptation")
+    >>>     return bool_to_yesno(adaptation_patch.verify_property_plip("cellular adaptation", "hypertrophy"))
+
+    >>> # Does an infarct in the brain show dissolution of the tissue?
+    >>> def execute_command(image):
+    >>>     image_patch = ImagePatch(image)
+    >>>     infarct_patches = image_patch.find_plip("infarct")
+    >>>     if infarct_patches:
+    >>>         infarct_patch = best_image_match_plip(infarct_patches, "infarct")
+    >>>         return bool_to_yesno(infarct_patch.verify_property_plip("infarct", "dissolution of tissue"))
+    >>>     else:
+    >>>         return "no"
+
+    >>> # Does preserved show dissolution of the tissue?
+    >>> def execute_command(image):
+    >>>     image_patch = ImagePatch(image)
+    >>>     preserved_patches = image_patch.find_plip("preserved")
+    >>>     preserved_patch = best_image_match_plip(preserved_patches, "preserved")
+    >>>     return bool_to_yesno(preserved_patch.verify_property_plip("preserved", "dissolution"))
+
     """
     return best_image_match_plip(list_patches, content)
 
@@ -296,7 +374,7 @@ def distance(patch_a: ImagePatch, patch_b: ImagePatch) -> float:
 
     Examples
     --------
-    # Return the qux that is closest to the foo
+    >>> # Return the qux that is closest to the foo
     >>> def execute_command(image):
     >>>     image_patch = ImagePatch(image)
     >>>     qux_patches = image_patch.find_plip('qux')
