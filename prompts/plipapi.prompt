@@ -103,6 +103,32 @@ class ImagePatch:
         >>>         return "Yes"
         >>>     else:
         >>>         return "No"
+
+        >>> # Where is the increased fibrosis?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     fibrosis_patches = image_patch.find_plip("increased fibrosis")
+        >>>     if len(fibrosis_patches) == 0:
+        >>>         return "No increased fibrosis found in the image."
+        >>>     else:
+        >>>         fibrosis_locations = []
+        >>>         for patch in fibrosis_patches:
+        >>>             fibrosis_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
+        >>>         return fibrosis_locations
+
+        >>> # Where are dilated and congested?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     dilated_patches = image_patch.find_plip("dilated")
+        >>>     congested_patches = image_patch.find_plip("congested")
+        >>>     dilated_and_congested_patches = [patch for patch in dilated_patches if patch in congested_patches]
+        >>>     if len(dilated_and_congested_patches) == 0:
+        >>>         return "No dilated and congested areas found in the image."
+        >>>     else:
+        >>>         dilated_and_congested_locations = []
+        >>>         for patch in dilated_and_congested_patches:
+        >>>             dilated_and_congested_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
+        >>>         return dilated_and_congested_locations
         """
         return find_plip(self.cropped_image, object_name)
 
@@ -173,6 +199,22 @@ class ImagePatch:
         >>>         if myocardium_patch.verify_property_plip("reversibly injured myocardium", "functional effects"):
         >>>             return "Yes"
         >>>     return "No"
+
+        >>> # Where is the wedge-shaped infarct slightly depressed?
+        >>> def execute_command(image):
+        >>>     image_patch = ImagePatch(image)
+        >>>     infarct_patches = image_patch.find_plip("wedge-shaped infarct")
+        >>>     if len(infarct_patches) == 0:
+        >>>         return "No wedge-shaped infarct found in the image."
+        >>>     else:
+        >>>         depressed_infarct_patches = [patch for patch in infarct_patches if patch.verify_property_plip("wedge-shaped infarct", "depressed")]
+        >>>         if len(depressed_infarct_patches) == 0:
+        >>>             return "No depressed wedge-shaped infarct found in the image."
+        >>>         else:
+        >>>             depressed_infarct_locations = []
+        >>>             for patch in depressed_infarct_patches:
+        >>>                 depressed_infarct_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
+        >>>             return depressed_infarct_locations
         """
         return verify_property_plip(self.cropped_image, object_name, visual_property)
 
@@ -294,7 +336,7 @@ class ImagePatch:
 
         Examples
         --------
-    
+
         >>> # What is the city this building is in?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
