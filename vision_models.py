@@ -239,13 +239,16 @@ class PLIPModel(BaseModel):
         img_width = image.size[0]
         img_height = image.size[1]
         
+        # Specifying the patch size (width, height) in pixels
+        patch_size = (128, 128)
+        
         # Preparing the patch list of the image width
-        img_width_list = range(0, img_width, 256)
+        img_width_list = range(0, img_width, patch_size[0])
         img_width_list = list(img_width_list)
         img_width_list.append(img_width)
         
         # Preparing the patch list of the image height
-        img_height_list = range(0, img_height, 256)
+        img_height_list = range(0, img_height, patch_size[1])
         img_height_list = list(img_height_list)
         img_height_list.append(img_height)
         
