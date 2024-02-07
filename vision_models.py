@@ -28,6 +28,8 @@ from typing import List, Union
 
 from configs import config
 from utils import HiddenPrints
+import pickle
+import numpy as np
 
 with open('api.key') as f:
     openai.api_key = f.read().strip()
@@ -157,7 +159,17 @@ class PLIPModel(BaseModel):
         self.transform = transforms.Compose([ # CLIPProcessor handles internal transforms
             transforms.ToTensor(),
         ])
-    
+        
+        # The following lines will read the pickle file for pvqa data and store them in variables
+        pvqa_qas_train_path = "/data/mn27889/pvqa/qas/train/train_qa.pkl"
+        # Getting a list of text from pvqa answers
+        with open(pvqa_qas_train_path, 'rb') as file:
+            pvqa_data = pickle.load(file)
+            self.pvqa_answers = [qas['answer'] for qas in pvqa_data]
+            self.pvqa_answers = list(set(self.pvqa_answers))
+            del pvqa_qas_train_path
+            del pvqa_data
+        
     @torch.no_grad()
     def binary_score(self, image: Image, prompt, negative_categories=None):
         # is_video = isinstance(image, torch.Tensor) and image.ndim == 4
@@ -172,7 +184,7 @@ class PLIPModel(BaseModel):
         # if negative_categories is None:
         #     with open('useful_lists/random_negatives.txt') as f:
         #         negative_categories = [x.strip() for x in f.read().split()]
-        
+
         # negative_categories = [prompt_prefix + x for x in negative_categories]
         # inputs = self.processor(text=[prompt] + negative_categories, images=image, return_tensors="pt", padding=True)
 
@@ -180,7 +192,7 @@ class PLIPModel(BaseModel):
         outputs = self.model(**inputs)
         logits_per_image = outputs.logits_per_image
         res = logits_per_image.squeeze(0)[0]
-        
+
         # run competition where we do a binary classification
         # between the positive and all the negatives, then take the mean
         # probs = (100 * logits_per_image).softmax(dim=1).squeeze(-2)
@@ -198,10 +210,10 @@ class PLIPModel(BaseModel):
         #                             probs[1:].unsqueeze(0)), dim=0), dim=0)[0].mean()
 
         return res
-    
+
     @torch.no_grad()
     def classify(self, image: Image, categories: list[str], return_index=True):
-        
+
         # is_list = isinstance(image, list)
         # if is_list:
         #     assert len(image) == len(categories)
@@ -221,7 +233,7 @@ class PLIPModel(BaseModel):
         outputs = self.model(**inputs)
         logits_per_image = outputs.logits_per_image
         similarity = (100 * logits_per_image).softmax(dim=1).squeeze(-2)
-        
+
         if not return_index:
             return similarity
         else:
@@ -231,27 +243,52 @@ class PLIPModel(BaseModel):
             return result
 
     @torch.no_grad()
+    def get_top_n_matching_categories_pvqa(self, image: Image, n) -> list[str]:
+        
+        batch_size = 100
+        index_range = np.arange(0, len(self.pvqa_answers), batch_size)
+        index_range = np.append(index_range, len(self.pvqa_answers))
+
+        image_similarity = np.empty((1,0))
+        for i in range(len(index_range)-1):
+            categories = self.pvqa_answers[index_range[i]:index_range[i+1]]
+            inputs = self.processor(text=categories, images=image, return_tensors="pt", padding=True).to(self.dev)
+            outputs = self.model(**inputs)
+            logits_per_image = outputs.logits_per_image
+            image_similarity = np.append(image_similarity, logits_per_image.cpu().detach().numpy())
+            del inputs
+            del outputs
+            del logits_per_image
+
+        sorted_index = np.argsort(image_similarity)
+        top_n_indices = sorted_index[0:n]
+
+        top_n_categories = [self.pvqa_answers[i] for i in top_n_indices]
+
+        return top_n_categories
+
+    @torch.no_grad()
     def find_object_coordinates(self, image: Image, prompt):
         prompt_prefix = "photo of "
         object_name =  prompt_prefix + prompt
-        
+
         # Calculating the image width and height to form the patches
         img_width = image.size[0]
         img_height = image.size[1]
-        
+
         # Specifying the patch size (width, height) in pixels
         patch_size = (128, 128)
-        
+
         # Preparing the patch list of the image width
         img_width_list = range(0, img_width, patch_size[0])
         img_width_list = list(img_width_list)
         img_width_list.append(img_width)
-        
+
         # Preparing the patch list of the image height
         img_height_list = range(0, img_height, patch_size[1])
         img_height_list = list(img_height_list)
         img_height_list.append(img_height)
-        
+
         image_coordinate_list = []
         for i in range(0, len(img_height_list) - 1):
             for j in range(0, len(img_width_list) - 1):
@@ -261,7 +298,7 @@ class PLIPModel(BaseModel):
                 logits_per_image = outputs.logits_per_image
                 if logits_per_image.squeeze(0)[0] > config.verify_property.thresh_plip:
                     image_coordinate_list.append((img_width_list[j], img_height_list[i], img_width_list[j+1], img_height_list[i+1]))
-        
+
         return image_coordinate_list
 
     @torch.no_grad()
@@ -274,7 +311,7 @@ class PLIPModel(BaseModel):
         outputs = self.model(**inputs)
         logits_per_image = outputs.logits_per_image
         similarity = (logits_per_image).softmax(dim=0).squeeze() # Only one text, so squeeze
-        
+
         if not return_index:
             return similarity
         else:
@@ -295,6 +332,9 @@ class PLIPModel(BaseModel):
         elif task == 'score':
             clip_score = self.binary_score(image, prompt, negative_categories=negative_categories)
             out = clip_score
+        elif task == 'top_n_categories':
+            top_n_categories = self.get_top_n_matching_categories_pvqa(image, prompt) # here prompt represents 'n' categories to be returned from pvqa dataset
+            out = top_n_categories
         else:  # task == 'compare'
             idx = self.compare(image, prompt, return_index=return_index)
             out = idx
@@ -996,10 +1036,10 @@ class GPT3Model(BaseModel):
             raise NotImplementedError
         response = self.query_gpt3(prompts, model=self.model, max_tokens=256, top_p=1, frequency_penalty=0,
                                    presence_penalty=0)
-        response = [r["text"] for r in response['choices']]
+        response = response.choices[0].message.content
         return response
 
-    def query_gpt3(self, prompt, model="text-davinci-003", max_tokens=16, logprobs=None, stream=False,
+    def query_gpt3(self, prompt, model="gpt-3.5-turbo", max_tokens=16, logprobs=None, stream=False,
                    stop=None, top_p=1, frequency_penalty=0, presence_penalty=0):
         if model == "chatgpt":
             messages = [{"role": "user", "content": p} for p in prompt]
@@ -1010,11 +1050,11 @@ class GPT3Model(BaseModel):
                 temperature=self.temperature,
             )
         else:
-            response = openai.Completion.create(
+            response = openai.chat.completions.create(
                 model=model,
-                prompt=prompt,
+                messages = [{"role": "system", "content": "You are an expert radiologist who can answer questions about the pathology images"},
+                            {"role": "user", "content": prompt}],
                 max_tokens=max_tokens,
-                logprobs=logprobs,
                 temperature=self.temperature,
                 stream=stream,
                 stop=stop,
@@ -1028,7 +1068,7 @@ class GPT3Model(BaseModel):
     def forward(self, prompt, process_name):
         if not self.to_batch:
             prompt = [prompt]
-        
+
         if process_name == 'gpt3_qa':
             # if items in prompt are tuples, then we assume it is a question and context
             if isinstance(prompt[0], tuple) or isinstance(prompt[0], list):
@@ -1246,7 +1286,7 @@ class BLIPModel(BaseModel):
         generated_text = [cap.strip() for cap in
                           self.processor.batch_decode(generated_ids, skip_special_tokens=True)]
         return generated_text
-    
+
     def pre_question(self, question):
         # from LAVIS blip_processors
         question = re.sub(

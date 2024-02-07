@@ -102,10 +102,10 @@ class ImagePatch:
             self.upper = upper + parent_lower
             self.right = right + parent_left
             self.lower = lower + parent_lower
-            
+
         if isinstance(image, Image.Image):
             self.height = self.cropped_image.size[1]
-            self.width = self.cropped_image.size[0]            
+            self.width = self.cropped_image.size[0]
         else:
             self.height = self.cropped_image.shape[1]
             self.width = self.cropped_image.shape[2]
@@ -117,14 +117,14 @@ class ImagePatch:
 
         self.horizontal_center = (self.left + self.right) / 2
         self.vertical_center = (self.lower + self.upper) / 2
-        
+
         if isinstance(image, Image.Image):
             if self.cropped_image.size[0] == 0 or self.cropped_image.size[0] == 0:
                 raise Exception("ImagePatch has no area")
         else:
             if self.cropped_image.shape[1] == 0 or self.cropped_image.shape[2] == 0:
                 raise Exception("ImagePatch has no area")
-            
+
         self.possible_options = load_json('./useful_lists/possible_options.json')
 
     def forward(self, model_name, *args, **kwargs):
@@ -269,7 +269,7 @@ class ImagePatch:
     def find_plip(self, object_name: str) -> list[ImagePatch]:
         """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
         This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
-    
+
         Parameters
         ----------
         object_name : str
@@ -350,6 +350,20 @@ class ImagePatch:
         text = option_list_to_use
         selected = self.forward(model_name, image, text, task='classify')
         return option_list[selected]
+
+    def top_n_text_match_plip_pvqa(self, n = 10) -> list[str]:
+        """Returns the top n categories from the answers given in pvqa dataset that best matches the image baed on cosine similarity score.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
+        Parameters
+        -------
+        n: int
+            A list with the names of the different options
+        """
+
+        model_name = config.plip_model
+        image = self.cropped_image
+        top_n_categories = self.forward(model_name, image, n, task='top_n_categories')
+        return top_n_categories
 
     def simple_query(self, question: str):
         """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
