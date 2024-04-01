@@ -26,6 +26,8 @@ class ImagePatch:
         References a large language model (e.g., GPT) to produce a response to the given question. Default is short-form answers, can be made long-form responses with the long_answer flag.
     crop(left: int, lower: int, right: int, upper: int)->ImagePatch
         Returns a new ImagePatch object containing a crop of the image at the given coordinates.
+    overlaps_with(left: int, lower: int, right: int, upper: int) -> bool:
+        Returns True if a crop with the given coordinates overlaps with this one, else returns False
     """
 
     def __init__(self, image: Union[Image.Image, torch.Tensor, np.ndarray], left: int = None, lower: int = None, right: int = None, upper: int = None):

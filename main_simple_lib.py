@@ -278,9 +278,14 @@ def execute_code(code, im, show_intermediate_steps=True):
             result = execute_command(im, my_fig, time_wait_between_lines, syntax)  # The code is created in the exec()
         except Exception as e:
             print(f"Encountered error {e} when trying to run with visualizations. Trying from scratch.")
-            exec(compile(code, 'Codex', 'exec'), globals())
-            result = execute_command(im, my_fig, time_wait_between_lines, syntax)  # The code is created in the exec()
-
+            try:
+                exec(compile(code, 'Codex', 'exec'), globals())
+                result = execute_command(im, my_fig, time_wait_between_lines, syntax)  # The code is created in the exec()
+            except Exception as e:
+                print(f"Encountered error {e} when trying from scratch.")
+                plt.close(my_fig)
+                return None
+                
         plt.close(my_fig)
 
     def is_not_fig(x):
@@ -306,7 +311,8 @@ def execute_code(code, im, show_intermediate_steps=True):
 
     console.rule(f"[bold]Final Result[/bold]", style="chartreuse2")
     show_all(None, result, 'Result', fig=f, usefig=usefig, disp=False, console_in=console, time_wait_between_lines=0)
-
+    
+    return result
 
 def show_single_image(im):
     # im = Image.fromarray((im.detach().cpu().numpy().transpose(1, 2, 0) * 255).astype("uint8"))
