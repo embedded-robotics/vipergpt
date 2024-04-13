@@ -76,7 +76,8 @@ class ImagePatch:
         """
 
         if isinstance(image, Image.Image):
-            image = transforms.ToTensor()(image)
+            # image = transforms.ToTensor()(image)
+            image = image
         elif isinstance(image, np.ndarray):
             image = torch.tensor(image).permute(1, 2, 0)
         elif isinstance(image, torch.Tensor) and image.dtype == torch.uint8:
@@ -86,17 +87,28 @@ class ImagePatch:
             self.cropped_image = image
             self.left = 0
             self.lower = 0
-            self.right = image.shape[2]  # width
-            self.upper = image.shape[1]  # height
+            if isinstance(image, Image.Image):
+                self.right = image.size[0]  # width
+                self.upper = image.size[1]  # height
+            else:
+                self.right = image.shape[2]  # width
+                self.upper = image.shape[1]  # height
         else:
-            self.cropped_image = image[:, image.shape[1]-upper:image.shape[1]-lower, left:right]
+            if isinstance(image, Image.Image):
+                self.cropped_image = image.crop((left, upper, right, lower))
+            else:
+                self.cropped_image = image[:, image.shape[1]-upper:image.shape[1]-lower, left:right]
             self.left = left + parent_left
             self.upper = upper + parent_lower
             self.right = right + parent_left
             self.lower = lower + parent_lower
 
-        self.height = self.cropped_image.shape[1]
-        self.width = self.cropped_image.shape[2]
+        if isinstance(image, Image.Image):
+            self.height = self.cropped_image.size[1]
+            self.width = self.cropped_image.size[0]
+        else:
+            self.height = self.cropped_image.shape[1]
+            self.width = self.cropped_image.shape[2]
 
         self.cache = {}
         self.queues = (None, None) if queues is None else queues
@@ -106,8 +118,12 @@ class ImagePatch:
         self.horizontal_center = (self.left + self.right) / 2
         self.vertical_center = (self.lower + self.upper) / 2
 
-        if self.cropped_image.shape[1] == 0 or self.cropped_image.shape[2] == 0:
-            raise Exception("ImagePatch has no area")
+        if isinstance(image, Image.Image):
+            if self.cropped_image.size[0] == 0 or self.cropped_image.size[0] == 0:
+                raise Exception("ImagePatch has no area")
+        else:
+            if self.cropped_image.shape[1] == 0 or self.cropped_image.shape[2] == 0:
+                raise Exception("ImagePatch has no area")
 
         self.possible_options = load_json('./useful_lists/possible_options.json')
 
@@ -121,9 +137,139 @@ class ImagePatch:
         else:
             return self.parent_img_patch.original_image
 
-    def find(self, object_name: str) -> list[ImagePatch]:
-        """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found.
-        Otherwise, returns an empty list.
+    # def find(self, object_name: str) -> list[ImagePatch]:
+    #     """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found.
+    #     Otherwise, returns an empty list.
+    #     Parameters
+    #     ----------
+    #     object_name : str
+    #         the name of the object to be found
+
+    #     Returns
+    #     -------
+    #     List[ImagePatch]
+    #         a list of ImagePatch objects matching object_name contained in the crop
+    #     """
+    #     if object_name in ["object", "objects"]:
+    #         all_object_coordinates = self.forward('maskrcnn', self.cropped_image)[0]
+    #     else:
+
+    #         if object_name == 'person':
+    #             object_name = 'people'  # GLIP does better at people than person
+
+    #         all_object_coordinates = self.forward('glip', self.cropped_image, object_name)
+    #     if len(all_object_coordinates) == 0:
+    #         return []
+
+    #     threshold = config.ratio_box_area_to_image_area
+    #     if threshold > 0:
+    #         area_im = self.width * self.height
+    #         all_areas = torch.tensor([(coord[2]-coord[0]) * (coord[3]-coord[1]) / area_im
+    #                                   for coord in all_object_coordinates])
+    #         mask = all_areas > threshold
+    #         # if not mask.any():
+    #         #     mask = all_areas == all_areas.max()  # At least return one element
+    #         all_object_coordinates = all_object_coordinates[mask]
+
+
+    #     return [self.crop(*coordinates) for coordinates in all_object_coordinates]
+
+    # def exists(self, object_name) -> bool:
+    #     """Returns True if the object specified by object_name is found in the image, and False otherwise.
+    #     Parameters
+    #     -------
+    #     object_name : str
+    #         A string describing the name of the object to be found in the image.
+    #     """
+    #     if object_name.isdigit() or object_name.lower().startswith("number"):
+    #         object_name = object_name.lower().replace("number", "").strip()
+
+    #         object_name = w2n.word_to_num(object_name)
+    #         answer = self.simple_query("What number is written in the image (in digits)?")
+    #         return w2n.word_to_num(answer) == object_name
+
+    #     patches = self.find(object_name)
+
+    #     filtered_patches = []
+    #     for patch in patches:
+    #         if "yes" in patch.simple_query(f"Is this a {object_name}?"):
+    #             filtered_patches.append(patch)
+    #     return len(filtered_patches) > 0
+
+    # def _score(self, category: str, negative_categories=None, model='clip') -> float:
+    #     """
+    #     Returns a binary score for the similarity between the image and the category.
+    #     The negative categories are used to compare to (score is relative to the scores of the negative categories).
+    #     """
+    #     if model == 'clip':
+    #         res = self.forward('clip', self.cropped_image, category, task='score',
+    #                            negative_categories=negative_categories)
+    #     elif model == 'tcl':
+    #         res = self.forward('tcl', self.cropped_image, category, task='score')
+    #     else:  # xvlm
+    #         task = 'binary_score' if negative_categories is not None else 'score'
+    #         res = self.forward('xvlm', self.cropped_image, category, task=task, negative_categories=negative_categories)
+    #         res = res.item()
+
+    #     return res
+
+    # def _detect(self, category: str, thresh, negative_categories=None, model='clip') -> bool:
+    #     return self._score(category, negative_categories, model) > thresh
+
+    # def verify_property(self, object_name: str, attribute: str) -> bool:
+    #     """Returns True if the object possesses the property, and False otherwise.
+    #     Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+    #     checking whether the object possesses the property.
+    #     Parameters
+    #     -------
+    #     object_name : str
+    #         A string describing the name of the object to be found in the image.
+    #     attribute : str
+    #         A string describing the property to be checked.
+    #     """
+    #     name = f"{attribute} {object_name}"
+    #     model = config.verify_property.model
+    #     negative_categories = [f"{att} {object_name}" for att in self.possible_options['attributes']]
+    #     if model == 'clip':
+    #         return self._detect(name, negative_categories=negative_categories,
+    #                             thresh=config.verify_property.thresh_clip, model='clip')
+    #     elif model == 'tcl':
+    #         return self._detect(name, thresh=config.verify_property.thresh_tcl, model='tcl')
+    #     else:  # 'xvlm'
+    #         return self._detect(name, negative_categories=negative_categories,
+    #                             thresh=config.verify_property.thresh_xvlm, model='xvlm')
+
+    # def best_text_match(self, option_list: list[str] = None, prefix: str = None) -> str:
+    #     """Returns the string that best matches the image.
+    #     Parameters
+    #     -------
+    #     option_list : str
+    #         A list with the names of the different options
+    #     prefix : str
+    #         A string with the prefixes to append to the options
+    #     """
+    #     option_list_to_use = option_list
+    #     if prefix is not None:
+    #         option_list_to_use = [prefix + " " + option for option in option_list]
+
+    #     model_name = config.best_match_model
+    #     image = self.cropped_image
+    #     text = option_list_to_use
+    #     if model_name in ('clip', 'tcl'):
+    #         selected = self.forward(model_name, image, text, task='classify')
+    #     elif model_name == 'xvlm':
+    #         res = self.forward(model_name, image, text, task='score')
+    #         res = res.argmax().item()
+    #         selected = res
+    #     else:
+    #         raise NotImplementedError
+
+    #     return option_list[selected]
+
+    def find_plip(self, object_name: str) -> list[ImagePatch]:
+        """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
+
         Parameters
         ----------
         object_name : str
@@ -134,45 +280,18 @@ class ImagePatch:
         List[ImagePatch]
             a list of ImagePatch objects matching object_name contained in the crop
         """
-        if object_name in ["object", "objects"]:
-            all_object_coordinates = self.forward('maskrcnn', self.cropped_image)[0]
-        else:
+        all_object_coordinates = self.forward('plip', self.cropped_image, object_name, task='find')
 
-            if object_name == 'person':
-                object_name = 'people'  # GLIP does better at people than person
+        return [self.crop(coordinates[0], coordinates[3], coordinates[2], coordinates[1]) for coordinates in all_object_coordinates]
 
-            all_object_coordinates = self.forward('glip', self.cropped_image, object_name)
-        if len(all_object_coordinates) == 0:
-            return []
-
-        threshold = config.ratio_box_area_to_image_area
-        if threshold > 0:
-            area_im = self.width * self.height
-            all_areas = torch.tensor([(coord[2]-coord[0]) * (coord[3]-coord[1]) / area_im
-                                      for coord in all_object_coordinates])
-            mask = all_areas > threshold
-            # if not mask.any():
-            #     mask = all_areas == all_areas.max()  # At least return one element
-            all_object_coordinates = all_object_coordinates[mask]
-
-
-        return [self.crop(*coordinates) for coordinates in all_object_coordinates]
-
-    def exists(self, object_name) -> bool:
+    def exists_plip(self, object_name: str) -> bool:
         """Returns True if the object specified by object_name is found in the image, and False otherwise.
         Parameters
         -------
         object_name : str
             A string describing the name of the object to be found in the image.
         """
-        if object_name.isdigit() or object_name.lower().startswith("number"):
-            object_name = object_name.lower().replace("number", "").strip()
-
-            object_name = w2n.word_to_num(object_name)
-            answer = self.simple_query("What number is written in the image (in digits)?")
-            return w2n.word_to_num(answer) == object_name
-
-        patches = self.find(object_name)
+        patches = self.find_plip(object_name)
 
         filtered_patches = []
         for patch in patches:
@@ -180,30 +299,27 @@ class ImagePatch:
                 filtered_patches.append(patch)
         return len(filtered_patches) > 0
 
-    def _score(self, category: str, negative_categories=None, model='clip') -> float:
+    def _score_plip(self, category: str, negative_categories=None, model='plip') -> float:
         """
         Returns a binary score for the similarity between the image and the category.
         The negative categories are used to compare to (score is relative to the scores of the negative categories).
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
         """
-        if model == 'clip':
-            res = self.forward('clip', self.cropped_image, category, task='score',
+        if model == 'plip':
+            res = self.forward('plip', self.cropped_image, category, task='score',
                                negative_categories=negative_categories)
-        elif model == 'tcl':
-            res = self.forward('tcl', self.cropped_image, category, task='score')
-        else:  # xvlm
-            task = 'binary_score' if negative_categories is not None else 'score'
-            res = self.forward('xvlm', self.cropped_image, category, task=task, negative_categories=negative_categories)
-            res = res.item()
-
+        else:
+            raise NotImplementedError
         return res
 
-    def _detect(self, category: str, thresh, negative_categories=None, model='clip') -> bool:
-        return self._score(category, negative_categories, model) > thresh
-
-    def verify_property(self, object_name: str, attribute: str) -> bool:
-        """Returns True if the object possesses the property, and False otherwise.
+    def verify_property_plip(self, object_name: str, attribute: str) -> bool:
+        """
+        Returns True if the object possesses the property, and False otherwise.
         Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
         checking whether the object possesses the property.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
         Parameters
         -------
         object_name : str
@@ -211,20 +327,13 @@ class ImagePatch:
         attribute : str
             A string describing the property to be checked.
         """
-        name = f"{attribute} {object_name}"
-        model = config.verify_property.model
-        negative_categories = [f"{att} {object_name}" for att in self.possible_options['attributes']]
-        if model == 'clip':
-            return self._detect(name, negative_categories=negative_categories,
-                                thresh=config.verify_property.thresh_clip, model='clip')
-        elif model == 'tcl':
-            return self._detect(name, thresh=config.verify_property.thresh_tcl, model='tcl')
-        else:  # 'xvlm'
-            return self._detect(name, negative_categories=negative_categories,
-                                thresh=config.verify_property.thresh_xvlm, model='xvlm')
+        attribute_name = f"{attribute} {object_name}"
 
-    def best_text_match(self, option_list: list[str] = None, prefix: str = None) -> str:
-        """Returns the string that best matches the image.
+        return self._score_plip(attribute_name, model='plip') > config.verify_property.thresh_plip
+
+    def best_text_match_plip(self, option_list: list[str] = None, prefix: str = None) -> str:
+        """Returns the string that best matches the image. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
         Parameters
         -------
         option_list : str
@@ -236,19 +345,25 @@ class ImagePatch:
         if prefix is not None:
             option_list_to_use = [prefix + " " + option for option in option_list]
 
-        model_name = config.best_match_model
+        model_name = config.plip_model
         image = self.cropped_image
         text = option_list_to_use
-        if model_name in ('clip', 'tcl'):
-            selected = self.forward(model_name, image, text, task='classify')
-        elif model_name == 'xvlm':
-            res = self.forward(model_name, image, text, task='score')
-            res = res.argmax().item()
-            selected = res
-        else:
-            raise NotImplementedError
-
+        selected = self.forward(model_name, image, text, task='classify')
         return option_list[selected]
+
+    def top_n_text_match_plip_pvqa(self, n = 10) -> list[str]:
+        """Returns the top n categories from the answers given in pvqa dataset that best matches the image baed on cosine similarity score.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
+        Parameters
+        -------
+        n: int
+            A list with the names of the different options
+        """
+
+        model_name = config.plip_model
+        image = self.cropped_image
+        top_n_categories = self.forward(model_name, image, n, task='top_n_categories')
+        return top_n_categories
 
     def simple_query(self, question: str):
         """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
@@ -261,20 +376,20 @@ class ImagePatch:
         """
         return self.forward('blip', self.cropped_image, question, task='qa')
 
-    def compute_depth(self):
-        """Returns the median depth of the image crop
-        Parameters
-        ----------
-        Returns
-        -------
-        float
-            the median depth of the image crop
-        """
-        original_image = self.original_image
-        depth_map = self.forward('depth', original_image)
-        depth_map = depth_map[original_image.shape[1]-self.upper:original_image.shape[1]-self.lower,
-                              self.left:self.right]
-        return depth_map.median()  # Ideally some kind of mode, but median is good enough for now
+    # def compute_depth(self):
+    #     """Returns the median depth of the image crop
+    #     Parameters
+    #     ----------
+    #     Returns
+    #     -------
+    #     float
+    #         the median depth of the image crop
+    #     """
+    #     original_image = self.original_image
+    #     depth_map = self.forward('depth', original_image)
+    #     depth_map = depth_map[original_image.shape[1]-self.upper:original_image.shape[1]-self.lower,
+    #                           self.left:self.right]
+    #     return depth_map.median()  # Ideally some kind of mode, but median is good enough for now
 
     def crop(self, left: int, lower: int, right: int, upper: int) -> ImagePatch:
         """Returns a new ImagePatch containing a crop of the original image at the given coordinates.
@@ -338,6 +453,22 @@ class ImagePatch:
 
     def __repr__(self):
         return "ImagePatch({}, {}, {}, {})".format(self.left, self.lower, self.right, self.upper)
+
+
+def best_image_match_plip(patch_list: list[ImagePatch], prompt: str) -> ImagePatch:
+    """Returns the image that best matches the string. This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+    non-pathology images.
+    Parameters
+    -------
+    patch_list : ImagePatch
+        a list of ImagePatch objects to be compared against the prompt
+    prompt : str
+        A string to match against different images
+    """
+
+    model_name = config.plip_model
+    selected = patch_list[0].forward(model_name, [p.cropped_image for p in patch_list], prompt, task='compare')
+    return patch_list[selected]
 
 
 def best_image_match(list_patches: list[ImagePatch], content: List[str], return_index: bool = False) -> \

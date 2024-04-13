@@ -1,0 +1,358 @@
+0,Are bile duct cells and canals of Hering stained here with an immunohistochemical stain for cytokeratin 7?,yes,/data/mn27889/pvqa/images/train/train_0422.jpg,No
+1,Does an infarct in the brain show dissolution of the tissue?,yes,/data/mn27889/pvqa/images/train/train_0986.jpg,yes
+2,Does preserved show dissolution of the tissue?,no,/data/mn27889/pvqa/images/train/train_0986.jpg,yes
+3,Do the areas of white chalky deposits represent foci of fat necrosis with calcium soap formation at sites of lipid breakdown in the mesentery?,yes,/data/mn27889/pvqa/images/train/train_0929.jpg,No
+4,Do the histone subunits represent foci of fat necrosis with calcium soap formation at sites of lipid breakdown in the mesentery?,no,/data/mn27889/pvqa/images/train/train_0929.jpg,No
+5,Is the cellular adaptation depicted here hypertrophy?,yes,/data/mn27889/pvqa/images/train/train_0218.jpg,yes
+6,Is there an infarct in the brain hypertrophy?,no,/data/mn27889/pvqa/images/train/train_0218.jpg,no
+7,Is the irreversible injury ischemic coagulative necrosis?,yes,/data/mn27889/pvqa/images/train/train_0218.jpg,yes
+9,"Is reversible injury thicker than 2 cm normal,  1-1.5 cm in the example of myocardial hypertrophy lower left?",no,/data/mn27889/pvqa/images/train/train_0218.jpg,
+10,"Does reversibly injured myocardium show functional effects without any gross or light microscopic changes,  or reversible changes such as cellular swelling and fatty change?",yes,/data/mn27889/pvqa/images/train/train_0218.jpg,Yes
+11,"Does an infarct in the brain show functional effects without any gross or light microscopic changes,  or reversible changes such as cellular swelling and fatty change (shown here)?",no,/data/mn27889/pvqa/images/train/train_0218.jpg,No
+12,Does the transmural light area in the posterolateral left ventricle represent an acute myocardial infarction in the specimen showing necrosis?,yes,/data/mn27889/pvqa/images/train/train_0218.jpg,
+13,Does reversible injury represent an acute myocardial infarction in the specimen showing necrosis?,no,/data/mn27889/pvqa/images/train/train_0218.jpg,No
+14,"Were all three transverse sections of myocardium stained with triphenyltetra-zolium chloride,  an enzyme substrate that colors viable myocardium magenta?",yes,/data/mn27889/pvqa/images/train/train_0218.jpg,"No, all three transverse sections of myocardium are not present in the image."
+15,Is failure to stain due to enzyme loss after cell death?,yes,/data/mn27889/pvqa/images/train/train_0218.jpg,No
+16,Is atrophy seen in the brain?,yes,/data/mn27889/pvqa/images/train/train_0026.jpg,no
+17,Is atrophy of the brain caused by aging and reduced blood supply?,yes,/data/mn27889/pvqa/images/train/train_0026.jpg,
+18,Is reversible injury caused by aging and reduced blood supply?,no,/data/mn27889/pvqa/images/train/train_0026.jpg,Yes
+19,Have the meninges been stripped from the bottom half of each specimen to show the surface of the brain?,yes,/data/mn27889/pvqa/images/train/train_0026.jpg,Yes
+20,Have the necrotic cells been stripped from the bottom half of each specimen to show the surface of the brain?,no,/data/mn27889/pvqa/images/train/train_0026.jpg,No
+21,Are iron deposits shown by a special staining process call the Prussian blue reaction?,yes,/data/mn27889/pvqa/images/train/train_0227.jpg,No iron deposits found in the image.
+22,Do the photomicrographs show an inflammatory reaction in the myocardium after ischemic necrosis infarction?,yes,/data/mn27889/pvqa/images/train/train_0147.jpg,
+23,Do apoptotic cells in colonic epithelium show an inflammatory reaction in the myocardium after ischemic necrosis infarction?,no,/data/mn27889/pvqa/images/train/train_0147.jpg,
+24,Do the photomicrographs show an inflammatory reaction in the myocardium after ischemic necrosis infarction?,yes,/data/mn27889/pvqa/images/train/train_0157.jpg,
+25,Do the meninges show an inflammatory reaction in the myocardium after ischemic necrosis infarction?,no,/data/mn27889/pvqa/images/train/train_0157.jpg,
+26,Are healthy neutrophils with nuclei stain red and cytoplasm green?,yes,/data/mn27889/pvqa/images/train/train_0229.jpg,Yes
+27,Did the areas of white chalky deposits stain red and cytoplasm green?,no,/data/mn27889/pvqa/images/train/train_0229.jpg,"No, not all cytoplasm stained green."
+28,Is low-power view of a cross section of a skin blister showing the epidermis separated from the dermis by a focal collection of serous effusion?,yes,/data/mn27889/pvqa/images/train/train_0220.jpg,Yes
+29,Is the irreversible injury separated from the dermis by a focal collection of serous effusion?,no,/data/mn27889/pvqa/images/train/train_0220.jpg,
+30,Is Collagen stained blue by the trichrome stain?,yes,/data/mn27889/pvqa/images/train/train_0473.jpg,Yes
+31,Is the injurious stimulus stained blue by the trichrome stain?,no,/data/mn27889/pvqa/images/train/train_0473.jpg,No
+32,"Is tissue factor the major initiator of coagulation,  which is amplified by feedback loops involving thrombin in vivo?",yes,/data/mn27889/pvqa/images/train/train_0665.jpg,
+33,Is the major initiator of coagulation amplified by feedback loops involving thrombin?,yes,/data/mn27889/pvqa/images/train/train_0665.jpg,
+34,Are the red polypeptides inactive factors?,yes,/data/mn27889/pvqa/images/train/train_0665.jpg,Yes
+35,Are all three transverse sections of myocardium inactive factors?,no,/data/mn27889/pvqa/images/train/train_0665.jpg,"No, there are not three transverse sections of myocardium in the image."
+36,Are the dark green polypeptides active factors?,yes,/data/mn27889/pvqa/images/train/train_0665.jpg,Yes
+37,Do the light green polypeptides correspond to cofactors?,yes,/data/mn27889/pvqa/images/train/train_0665.jpg,Yes
+38,Do the necrotic cells correspond to cofactors?,no,/data/mn27889/pvqa/images/train/train_0665.jpg,No
+39,"Does the initial reaction complex consist of a protease, a substrate, and a reaction accelerator assembled on a platelet phospholipid surface?",yes,/data/mn27889/pvqa/images/train/train_0685.jpg,
+40,Does atrophy of the brain consist of a protease assembled on a platelet phospholipid surface?,no,/data/mn27889/pvqa/images/train/train_0685.jpg,
+41,Is a thrombosed artery stained for elastic tissue?,yes,/data/mn27889/pvqa/images/train/train_0598.jpg,Yes
+42,Is embolus derived from a lower-extremity deep venous thrombus lodged in a pulmonary artery branch?,yes,/data/mn27889/pvqa/images/train/train_0533.jpg,
+43,Is edema lodged in a pulmonary artery branch?,no,/data/mn27889/pvqa/images/train/train_0533.jpg,No
+44,Is the remote kidney infarct replaced by a large fibrotic scar?,yes,/data/mn27889/pvqa/images/train/train_0751.jpg,No
+45,Are the areas of white chalky deposits illustrated schematically?,no,/data/mn27889/pvqa/images/train/train_0678.jpg,Yes
+46,"Is the immediate reaction characterized by an inflammatory infiltrate rich in eosinophils,  neutrophils,  and T cells?",no,/data/mn27889/pvqa/images/train/train_0740.jpg,No immediate reaction found in the image.
+48,"Is a speckled pattern seen with antibodies against various nuclear antigens,  including Sm and RNPs?",yes,/data/mn27889/pvqa/images/train/train_0545.jpg,No speckled pattern found in the image.
+49,"Is failure to stain seen with antibodies against various nuclear antigens,  including Sm and RNPs?",no,/data/mn27889/pvqa/images/train/train_0545.jpg,No
+50,"Is immunoperoxidase staining seen with antibodies against various nuclear antigens,  including Sm and RNPs?",no,/data/mn27889/pvqa/images/train/train_0545.jpg,Yes
+51,"Is the wall of the artery seen with antibodies against various nuclear antigens,  including Sm and RNPs?",no,/data/mn27889/pvqa/images/train/train_0545.jpg,No wall of the artery found in the image.
+52,"Is Margin P seen with antibodies against various nuclear antigens,  including Sm and RNPs?",no,/data/mn27889/pvqa/images/train/train_0433.jpg,No
+53,"Is the pattern of staining of anti-centromere antibodies seen in some cases of systemic sclerosis,  Sjogren syndrome,  and other diseases?",yes,/data/mn27889/pvqa/images/train/train_0433.jpg,No
+54,"Is the principal cellular alterations that characterize reversible cell injury and necrosis seen in some cases of systemic sclerosis,  Sjogren syndrome,  and other diseases?",no,/data/mn27889/pvqa/images/train/train_0433.jpg,
+55,"Are neutrophils seen in some cases of systemic sclerosis,  Sjogren syndrome,  and other diseases?",no,/data/mn27889/pvqa/images/train/train_0433.jpg,
+56,"Is the dark green polypeptides seen in some cases of systemic sclerosis,  Sjogren syndrome,  and other diseases?",no,/data/mn27889/pvqa/images/train/train_0433.jpg,No
+57,"Are genes that encode several proteins involved in antigen processing seen in some cases of systemic sclerosis,  Sjogren syndrome,  and other diseases?",no,/data/mn27889/pvqa/images/train/train_0433.jpg,No
+58,Do subendothelial dense deposits correspond to wire loops seen by light microscopy?,yes,/data/mn27889/pvqa/images/train/train_0292.jpg,No
+60,Does methylation of particular histone residues  correspond to wire loops seen by light microscopy?,no,/data/mn27889/pvqa/images/train/train_0292.jpg,No
+61,Is extracapillary proliferation not prominent in this case?,yes,/data/mn27889/pvqa/images/train/train_0294.jpg,No extracapillary proliferation found in the image.
+62,Is the embolus not prominent in this case?,no,/data/mn27889/pvqa/images/train/train_0294.jpg,No embolus found in the image.
+63,Is atrophy of the brain not prominent in this case?,no,/data/mn27889/pvqa/images/train/train_0294.jpg,"Yes, atrophy of the brain is prominent in this case."
+64,Is deposition of IgG antibody in a granular pattern detected by immunofluorescence?,yes,/data/mn27889/pvqa/images/train/train_0478.jpg,Yes
+65,Is the immediate vascular and smooth muscle reaction to allergen detected by immunofluorescence?,no,/data/mn27889/pvqa/images/train/train_0478.jpg,No immediate vascular and smooth muscle reaction to allergen detected in the image.
+66,Does an H&E-stained section show liquefactive degeneration of the basal layer of the epidermis and edema at the dermoepidermal junction?,yes,/data/mn27889/pvqa/images/train/train_0476.jpg,No
+67,Does the immediate reaction show liquefactive degeneration of the basal layer of the epidermis and edema at the dermoepidermal junction?,no,/data/mn27889/pvqa/images/train/train_0476.jpg,No immediate reaction found in the image.
+68,Does the remote kidney infarct show liquefactive degeneration of the basal layer of the epidermis and edema at the dermoepidermal junction?,no,/data/mn27889/pvqa/images/train/train_0476.jpg,No remote kidney infarct found in the image.
+69,Is acute cellular rejection of a kidney graft manifested by inflammatory cells in the inter-stitium and between epithelial cells of the tubules tubulitis?,yes,/data/mn27889/pvqa/images/train/train_0363.jpg,No acute cellular rejection of a kidney graft found in the image.
+70,Is periodic acid-schiff manifested by inflammatory cells in the inter-stitium and between epithelial cells of the tubules tubulitis?,no,/data/mn27889/pvqa/images/train/train_0363.jpg,
+71,Are collapsed tubules outlined by wavy basement membranes?,yes,/data/mn27889/pvqa/images/train/train_0363.jpg,No
+72,Are t_h17 cells in granuloma formation outlined by wavy basement membranes?,no,/data/mn27889/pvqa/images/train/train_0363.jpg,
+73,Is an arteriole shown with inflammatory cells attacking and undermining the endothelium arrow?,yes,/data/mn27889/pvqa/images/train/train_0746.jpg,
+74,Is a section of an involved lacrimal gland shown with inflammatory cells attacking and undermining the endothelium arrow?,no,/data/mn27889/pvqa/images/train/train_0746.jpg,
+75,"Does the glomerulus show inflammatory cells within the capillary loops glomerulitis,  accumulation of mesangial matrix,  and duplication of the capillary basement membrane?",yes,/data/mn27889/pvqa/images/train/train_0628.jpg,Yes
+76,"Does the extensive subcutaneous fibrosis show inflammatory cells within the capillary loops glomerulitis,  accumulation of mesangial matrix,  and duplication of the capillary basement membrane?",no,/data/mn27889/pvqa/images/train/train_0628.jpg,No extensive subcutaneous fibrosis found in the image.
+77,Do interstitial fibrosis and tubular atrophy result from arteriosclerosis of arteries and arterioles in a chronically rejecting kidney allograft?,yes,/data/mn27889/pvqa/images/train/train_0559.jpg,
+78,Does a speckled pattern result from arteriosclerosis of arteries and arterioles in a chronically rejecting kidney allograft?,no,/data/mn27889/pvqa/images/train/train_0559.jpg,
+79,"Does the blue area show fibrosis,  contrasted with the normal kidney right in this trichrome stain?",yes,/data/mn27889/pvqa/images/train/train_0559.jpg,Cannot find both blue area and normal kidney in the image.
+80,"Does the tissue factor show fibrosis,  contrasted with the normal kidney right in this trichrome stain?",no,/data/mn27889/pvqa/images/train/train_0559.jpg,
+81,Is an artery showing prominent arteriosclerosis shown (bottom right)?,yes,/data/mn27889/pvqa/images/train/train_0559.jpg,No
+82,Is the embolus shown (bottom right)?,no,/data/mn27889/pvqa/images/train/train_0559.jpg,Yes
+83,"Does Congo red staining show apple-green birefringence under polarized light,  a diagnostic feature of amyloid?",yes,/data/mn27889/pvqa/images/train/train_0764.jpg,No Congo red staining found in the image.
+84,"Does ischemic injury showing surface blebs show apple-green birefringence under polarized light,  a diagnostic feature of amyloid?",no,/data/mn27889/pvqa/images/train/train_0764.jpg,No ischemic injury with surface blebs found in the image.
+85,Does a section of liver stained with Congo red reveal pink-red deposits of amyloid in the walls of blood vessels and along sinusoids?,yes,/data/mn27889/pvqa/images/train/train_0344.jpg,No section of liver found in the image.
+86,Does graft damage reveal pink-red deposits of amyloid in the walls of blood vessels and along sinusoids?,no,/data/mn27889/pvqa/images/train/train_0344.jpg,No graft damage found in the image.
+87,Are small nests of epithelial cells and myxoid stroma forming cartilage and bone presented in this field?,yes,/data/mn27889/pvqa/images/train/train_0697.jpg,
+88,Are cm presented in this field?,no,/data/mn27889/pvqa/images/train/train_0697.jpg,no
+89,Does high-power detailed view of anaplastic tumor cells show cellular and nuclear variation in size and shape?,yes,/data/mn27889/pvqa/images/train/train_0583.jpg,No
+90,Do the majority of tissue macrophages show cellular and nuclear variation in size and shape?,no,/data/mn27889/pvqa/images/train/train_0583.jpg,No tissue macrophages found in the image.
+92,Does the graft damage have an abnormal tripolar spindle?,no,/data/mn27889/pvqa/images/train/train_0583.jpg,No
+93,Is the entire thickness of the epithelium replaced by atypical dysplastic cells?,yes,/data/mn27889/pvqa/images/train/train_0627.jpg,No
+94,Is the transmural light area in the posterolateral left ventricle replaced by atypical dysplastic cells?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,
+95,Does the low-power view show that the entire thickness of the epithelium is replaced by atypical dysplastic cells?,yes,/data/mn27889/pvqa/images/train/train_0627.jpg,No
+96,Do interstitial fibrosis and tubular atrophy show that the entire thickness of the epithelium is replaced by atypical dysplastic cells?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,
+97,What is orderly differentiation of squamous cells?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,
+98,Is there orderly differentiation of squamous cells?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,No
+99,Is Margin P orderly differentiation of squamous cells?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,No Margin P found in the image.
+100,Is there no tumor in the subepithelial stroma?,yes,/data/mn27889/pvqa/images/train/train_0627.jpg,"Yes, there is no tumor in the subepithelial stroma."
+101,Is the section of an involved lacrimal gland no tumor in the subepithelial stroma?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,Yes
+102,Is the basement membrane intact?,yes,/data/mn27889/pvqa/images/train/train_0627.jpg,no
+103,Is the prominent cell in the center field intact?,no,/data/mn27889/pvqa/images/train/train_0627.jpg,No prominent cell found in the center field.
+104,"Is the tan-colored,  encapsulated small tumor sharply demarcated from the whiter breast tissue?",yes,/data/mn27889/pvqa/images/train/train_0515.jpg,Yes
+105,Is the congo red staining sharply demarcated from the whiter breast tissue?,no,/data/mn27889/pvqa/images/train/train_0515.jpg,Yes
+106,Is a liver studded with metastatic cancer?,yes,/data/mn27889/pvqa/images/train/train_0339.jpg,No
+107,Is the late-phase reaction studded with metastatic cancer?,no,/data/mn27889/pvqa/images/train/train_0339.jpg,No
+108,"Are large,  flat cells with small nuclei typical?",yes,/data/mn27889/pvqa/images/train/train_0405.jpg,"No large, flat cells with small nuclei found in the image."
+109,Are two small pulmonary arterioles typical?,no,/data/mn27889/pvqa/images/train/train_0405.jpg,"No, the image does not contain two small pulmonary arterioles."
+110,Are numerous friable mural thrombi in mitosis?,no,/data/mn27889/pvqa/images/train/train_0405.jpg,Yes
+111,Is nuclear pleomorphism evident?,yes,/data/mn27889/pvqa/images/train/train_0405.jpg,no
+112,Is atrophy of the brain evident?,no,/data/mn27889/pvqa/images/train/train_0405.jpg,no
+113,"Are a few interspersed neutrophils,  much smaller in size and with compact,  lobate nuclei,  seen?",yes,/data/mn27889/pvqa/images/train/train_0405.jpg,No neutrophils found in the image.
+114,Is genetic analysis of cancers being utilized to identify mutations that can be targeted by drugs?,yes,/data/mn27889/pvqa/images/train/train_0406.jpg,
+115,Are the necrotic cells being utilized to identify mutations that can be targeted by drugs?,no,/data/mn27889/pvqa/images/train/train_0406.jpg,No necrotic cells found in the image.
+116,Are extensive mucous plugging and dilation of the tracheobronchial tree apparent?,yes,/data/mn27889/pvqa/images/train/train_0498.jpg,no
+117,Are low-power view of a thrombosed artery apparent?,no,/data/mn27889/pvqa/images/train/train_0498.jpg,yes
+118,Is the greenish discoloration the product of Pseudomonas infections?,yes,/data/mn27889/pvqa/images/train/train_0498.jpg,Yes
+119,Is collagen the product of Pseudomonas infections?,no,/data/mn27889/pvqa/images/train/train_0498.jpg,
+120,Is the pulmonary parenchyma consolidated by a combination of both secretions and pneumonia?,yes,/data/mn27889/pvqa/images/train/train_0498.jpg,No
+121,Is numerous friable mural thrombi consolidated by a combination of both secretions and pneumonia?,no,/data/mn27889/pvqa/images/train/train_0498.jpg,No
+122,Does a large neuron have obvious lipid vacuolation under the light microscope?,yes,/data/mn27889/pvqa/images/train/train_0460.jpg,Yes
+123,Does reversibly injured myocardium have obvious lipid vacuolation under the light microscope?,no,/data/mn27889/pvqa/images/train/train_0460.jpg,No reversibly injured myocardium found in the image.
+125,Does immunoperoxidase show prominent lysosomes with whorled configurations just below part of the nucleus?,no,/data/mn27889/pvqa/images/train/train_0383.jpg,No
+126,"Do the hepatocytes and Kupffer cells have a foamy,  vacuolated appearance resulting from deposition of lipids?",yes,/data/mn27889/pvqa/images/train/train_0340.jpg,No
+127,Is electron micrograph of Gaucher cells with elongated distended lysosomes?,yes,/data/mn27889/pvqa/images/train/train_0316.jpg,yes
+128,Are the midface structures fused or ill-formed?,yes,/data/mn27889/pvqa/images/train/train_0049.jpg,The midface structures are fused.
+129,"Is stillbirth associated with a lethal malformation,  in which the midface structures are fused or ill-formed?",yes,/data/mn27889/pvqa/images/train/train_0049.jpg,
+130,"Is the granuloma in the center associated with a lethal malformation,  in which the midface structures are fused or ill-formed?",no,/data/mn27889/pvqa/images/train/train_0049.jpg,No granuloma found in the center of the image.
+131,Is this degree of external dysmorphogenesis associated with severe internal anomalies such as maldevelopment of the brain and cardiac defects in almost all cases?,yes,/data/mn27889/pvqa/images/train/train_0049.jpg,No
+132,Is atrophy associated with severe internal anomalies such as maldevelopment of the brain and cardiac defects in almost all cases?,no,/data/mn27889/pvqa/images/train/train_0049.jpg,Yes
+133,Does the band of amnion extend from the portion of the amniotic sac to encircle the leg of the fetus?,yes,/data/mn27889/pvqa/images/train/train_0067.jpg,No
+134,Does the blue area extend from the portion of the amniotic sac to encircle the leg of the fetus?,no,/data/mn27889/pvqa/images/train/train_0067.jpg,
+135,"Is the placenta at the right, in the specimen shown?",yes,/data/mn27889/pvqa/images/train/train_0067.jpg,No placenta found in the image.
+136,"Is the cause of reversible injury at the right, in the specimen shown?",no,/data/mn27889/pvqa/images/train/train_0067.jpg,No reversible injury found in the image.
+137,Is this hematoxylin-eosin stain?,yes,/data/mn27889/pvqa/images/train/train_0207.jpg,yes
+138,Is this Hyaline membrane disease?,yes,/data/mn27889/pvqa/images/train/train_0207.jpg,no
+139,Does this appearance imply impending perforation?,yes,/data/mn27889/pvqa/images/train/train_0243.jpg,Yes
+140,Does atrophy imply impending perforation?,no,/data/mn27889/pvqa/images/train/train_0243.jpg,
+141,Does the congested portion of the ileum correspond to areas of hemorrhagic infarction and transmural necrosis?,yes,/data/mn27889/pvqa/images/train/train_0177.jpg,
+142,Does the b-cell antigen receptor complex correspond to areas of hemorrhagic infarction and transmural necrosis?,no,/data/mn27889/pvqa/images/train/train_0177.jpg,
+143,Are numerous islands of extramedullary hematopoiesis scattered among mature hepatocytes in this histologic preparation from an infant with nonimmune hydrops fetalis?,yes,/data/mn27889/pvqa/images/train/train_0205.jpg,No
+144,Are neutrophils scattered among mature hepatocytes in this histologic preparation from an infant with nonimmune hydrops fetalis?,no,/data/mn27889/pvqa/images/train/train_0205.jpg,No
+145,Is the blood-brain barrier less developed in the neonatal period than it is in adulthood?,yes,/data/mn27889/pvqa/images/train/train_0244.jpg,
+146,Are some long-lived resident tissue macrophages less developed in the neonatal period than they are in adulthood?,no,/data/mn27889/pvqa/images/train/train_0244.jpg,No
+147,Does this occur because the blood-brain barrier is less developed in the neonatal period than it is in adulthood?,yes,/data/mn27889/pvqa/images/train/train_0244.jpg,Cannot determine from the image.
+148,Does the cause of reversible injury occur because the blood-brain barrier is less developed in the neonatal period than it is in adulthood?,no,/data/mn27889/pvqa/images/train/train_0244.jpg,
+149,Do infants who survive develop long-term neurologic sequelae?,yes,/data/mn27889/pvqa/images/train/train_0244.jpg,
+150,Does healthy neutrophils with nuclei develop long-term neurologic sequelae?,no,/data/mn27889/pvqa/images/train/train_0244.jpg,
+151,Had the congenital capillary hemangioma at birth after the lesion undergone spontaneous regression?,yes,/data/mn27889/pvqa/images/train/train_0176.jpg,Yes
+152,Had the congenital capillary hemangioma at 2 years of age after the lesion undergone spontaneous regression?,yes,/data/mn27889/pvqa/images/train/train_0137.jpg,No
+153,Had thrombus in the left and right ventricular apices undergone spontaneous regression?,no,/data/mn27889/pvqa/images/train/train_0137.jpg,No
+154,Is this tumor composed of small cells embedded in a finely fibrillar matrix?,yes,/data/mn27889/pvqa/images/train/train_0010.jpg,No
+155,Is the late-phase reaction composed of small cells embedded in a finely fibrillar matrix?,no,/data/mn27889/pvqa/images/train/train_0010.jpg,No
+156,Is a Homer-Wright pseudorosette seen in the upper right corner?,yes,/data/mn27889/pvqa/images/train/train_0010.jpg,Yes
+158,Are Ganglioneuromas characterized by clusters of large ganglion cells with vesicular nuclei and abundant eosinophilic cytoplasm (arrow)?,yes,/data/mn27889/pvqa/images/train/train_0069.jpg,Yes
+159,Is a liver characterized by clusters of large ganglion cells with vesicular nuclei and abundant eosinophilic cytoplasm arrow?,no,/data/mn27889/pvqa/images/train/train_0069.jpg,Yes
+160,Are spindle-shaped Schwann cells present in the background stroma?,yes,/data/mn27889/pvqa/images/train/train_0069.jpg,No
+161,Are infants who survive presented in the background stroma?,no,/data/mn27889/pvqa/images/train/train_0069.jpg,No
+162,Is FISH using a fluorescein-labeled cosmid probe for N-myc on a tissue section containing neuroblastoma attached to the kidney?,yes,/data/mn27889/pvqa/images/train/train_0117.jpg,
+163,Is spindle-shaped schwann cells attached to the kidney?,no,/data/mn27889/pvqa/images/train/train_0117.jpg,No
+164,Does this correspond to amplified N-MYC in the form of homogeneously staining regions?,yes,/data/mn27889/pvqa/images/train/train_0117.jpg,No
+165,Does section of an involved lacrimal gland correspond to amplified N-MYC in the form of homogeneously staining regions?,no,/data/mn27889/pvqa/images/train/train_0117.jpg,
+166,Do renal tubular epithelial cells in the lower half of the photograph show no nuclear staining and background cytoplasmic staining?,yes,/data/mn27889/pvqa/images/train/train_0117.jpg,Yes
+167,Do the photomicrographs show no nuclear staining and background cytoplasmic staining?,no,/data/mn27889/pvqa/images/train/train_0117.jpg,No
+168,Are there two 22q13 signals?,yes,/data/mn27889/pvqa/images/train/train_1002.jpg,no
+169,"Does one of the two chromosomes not stain with the probe for 22q11 .2,  indicating a microdeletion in this region?",yes,/data/mn27889/pvqa/images/train/train_1002.jpg,"Yes, one of the chromosomes does not stain with the probe for 22q11.2, indicating a microdeletion in this region."
+170,Does this abnormality give rise to the 22q11 .2 deletion syndrome DiGeorge syndrome?,yes,/data/mn27889/pvqa/images/train/train_1002.jpg,No
+171,Does sci transl give rise to the 22q11 .2 deletion syndrome DiGeorge syndrome?,no,/data/mn27889/pvqa/images/train/train_1002.jpg,
+172,"Has impaired remodeling of calcified cartilage in the epiphyses of the wrist caused a marked increase in their radiodensity,  so that they are as radiopaque as the cortical bone?",yes,/data/mn27889/pvqa/images/train/train_0909.jpg,Yes
+173,"Have large,  flat cells with small nuclei caused a marked increase in their radiodensity,  so that they are as radiopaque as the cortical bone?",no,/data/mn27889/pvqa/images/train/train_0909.jpg,No
+174,Are the bridging strands of fibrous tissues evident?,yes,/data/mn27889/pvqa/images/train/train_0014.jpg,Yes
+175,"Are a few interspersed neutrophils,  much smaller in size and with compact,  lobate nuclei,  evident?",no,/data/mn27889/pvqa/images/train/train_0014.jpg,No neutrophils found in the image.
+176,Are vascular changes and fibrosis of salivary glands produced by radiation therapy of the neck region?,yes,/data/mn27889/pvqa/images/train/train_0969.jpg,
+177,Are bile duct cells and canals of hering produced by radiation therapy of the neck region?,no,/data/mn27889/pvqa/images/train/train_0969.jpg,No
+178,Is vascular changes and fibrosis of salivary glands produced by radiation therapy of the neck region?,yes,/data/mn27889/pvqa/images/train/train_0911.jpg,
+179,Is bile duct cells and canals of hering produced by radiation therapy of the neck region?,no,/data/mn27889/pvqa/images/train/train_0911.jpg,
+180,Is vascular changes and fibrosis of salivary glands produced by radiation therapy of the neck region?,yes,/data/mn27889/pvqa/images/train/train_0942.jpg,
+181,Is the alveolar spaces and blood vessels produced by radiation therapy of the neck region?,no,/data/mn27889/pvqa/images/train/train_0942.jpg,
+182,Does the head appear to be too large for the emaciated body?,yes,/data/mn27889/pvqa/images/train/train_0793.jpg,"No, the head does not appear to be too large for the emaciated body."
+183,Does genomic dna appear to be too large for the emaciated body?,no,/data/mn27889/pvqa/images/train/train_0793.jpg,Yes
+184,"Does the infant show generalized edema,  seen as ascites and puffiness of the face,  hands,  and legs?",yes,/data/mn27889/pvqa/images/train/train_0833.jpg,"No, the infant does not show generalized edema, seen as ascites and puffiness of the face, hands, and legs."
+185,Is bowing of legs a consequence of the formation of poorly mineralized bone in a child with rickets?,yes,/data/mn27889/pvqa/images/train/train_0204.jpg,
+186,Did bile duct cells and canals of hering mineralize bone in a child with rickets?,no,/data/mn27889/pvqa/images/train/train_0204.jpg,
+187,Do infected cells show distinct nuclear inclusions?,yes,/data/mn27889/pvqa/images/train/train_0109.jpg,No
+188,Do energy stores show distinct nuclear inclusions?,no,/data/mn27889/pvqa/images/train/train_0109.jpg,No
+189,"Do infected hepatocytes show diffuse granular cyto-plasm,  reflecting accumulated hepatitis B surface antigen HBsAg in chronic infections?",yes,/data/mn27889/pvqa/images/train/train_0020.jpg,
+190,"Do those with tumors that had mycn amplification show diffuse granular cyto-plasm,  reflecting accumulated hepatitis B surface antigen HBsAg in chronic infections?",no,/data/mn27889/pvqa/images/train/train_0020.jpg,No tumors with mycn amplification found in the image.
+191,Does gram stain preparation of a bronchoalveolar lavage specimen show gram-negative intracellular rods typical of members of Enterobacteriaceae such as Klebsiella pneumoniae or Escherichia coli?,yes,/data/mn27889/pvqa/images/train/train_0139.jpg,Yes
+192,Does collagen stain preparation of a bronchoalveolar lavage specimen show gram-negative intracellular rods typical of members of Enterobacteriaceae such as Klebsiella pneumoniae or Escherichia coli?,no,/data/mn27889/pvqa/images/train/train_0139.jpg,Yes
+193,Is this silver stain preparation of brain tissue from a patient with Lyme disease meningoencephalitis?,yes,/data/mn27889/pvqa/images/train/train_0172.jpg,
+194,Is a homer-wright pseudorosette stain preparation of brain tissue from a patient with Lyme disease meningoencephalitis?,no,/data/mn27889/pvqa/images/train/train_0172.jpg,No
+195,Is the lumen markedly narrowed?,yes,/data/mn27889/pvqa/images/train/train_0210.jpg,No
+196,Is herpes simplex virus and varicella-zoster virus markedly narrowed?,no,/data/mn27889/pvqa/images/train/train_0210.jpg,no
+197,Is the arteriolar wall thickened with the deposition of amorphous proteinaceous material hyalinized?,yes,/data/mn27889/pvqa/images/train/train_0210.jpg,No arteriolar wall found in the image.
+198,Is edema thickened with the deposition of amorphous proteinaceous material hyalinized?,no,/data/mn27889/pvqa/images/train/train_0210.jpg,No edema found in the image.
+199,"Does the fatty streak in an experimental hypercholesterolemic rabbit demonstrate intimal,  macrophage-derived foam cells ?",yes,/data/mn27889/pvqa/images/train/train_0939.jpg,No
+200,"Does the anomalous area demonstrate intimal,  macrophage-derived foam cells ?",no,/data/mn27889/pvqa/images/train/train_0939.jpg,No
+201,Did the normal media for comparison show the regular layered pattern of elastic tissue?,yes,/data/mn27889/pvqa/images/train/train_0987.jpg,Yes
+202,Did the majority of tissue macrophages show the regular layered pattern of elastic tissue?,no,/data/mn27889/pvqa/images/train/train_0987.jpg,No
+203,Is elastin stained black in the figure?,yes,/data/mn27889/pvqa/images/train/train_0987.jpg,Yes
+204,Is this stained black in the figure?,no,/data/mn27889/pvqa/images/train/train_0987.jpg,no
+205,"Is the lumen filled by a large,  layered thrombus?",yes,/data/mn27889/pvqa/images/train/train_0096.jpg,Yes
+206,"Is the areas of white chalky deposits filled by a large,  layered thrombus?",no,/data/mn27889/pvqa/images/train/train_0096.jpg,No
+207,Is the wall of the aneurysm attenuated?,yes,/data/mn27889/pvqa/images/train/train_0096.jpg,Yes
+208,Is acute cellular rejection of a kidney graft attenuated?,no,/data/mn27889/pvqa/images/train/train_0096.jpg,"No, the acute cellular rejection of a kidney graft is not attenuated."
+209,"Does the distal edge of the intramural hematoma lie at the edge of a large area of atherosclerosis,  which arrested the propagation of the dissection?",yes,/data/mn27889/pvqa/images/train/train_0924.jpg,Yes
+210,"Does stillbirth lie at the edge of a large area of atherosclerosis,  which arrested the propagation of the dissection?",no,/data/mn27889/pvqa/images/train/train_0924.jpg,
+211,"Is blood red in this section,  stained with Movat stain?",yes,/data/mn27889/pvqa/images/train/train_0931.jpg,No
+212,"Is sci transl red in this section,  stained with Movat stain?",no,/data/mn27889/pvqa/images/train/train_0931.jpg,Yes
+213,"Are black Aortic elastic layers, and red blood in this section, stained with Movat stain?",yes,/data/mn27889/pvqa/images/train/train_0931.jpg,no
+214,Are aortic elastic layers black?,yes,/data/mn27889/pvqa/images/train/train_0931.jpg,Yes
+215,Do the cross-sections of the right carotid artery from the patient shown in the figure demonstrate marked intimal thickening and luminal narrowing?,yes,/data/mn27889/pvqa/images/train/train_0873.jpg,No
+216,Do the histone subunits shown in the figure demonstrate marked intimal thickening and luminal narrowing?,no,/data/mn27889/pvqa/images/train/train_0873.jpg,No histone subunits found in the image.
+217,Is the inner core of tan tissue the area of intimal hyperplasia?,yes,/data/mn27889/pvqa/images/train/train_0873.jpg,No
+218,Is the b-cell antigen receptor complex the area of intimal hyperplasia?,no,/data/mn27889/pvqa/images/train/train_0873.jpg,No
+219,Do the white circles correspond to the original vessel wall?,yes,/data/mn27889/pvqa/images/train/train_0873.jpg,No
+220,Do small intestine stem cells correspond to the original vessel wall?,no,/data/mn27889/pvqa/images/train/train_0873.jpg,No
+221,Are histologic features those of acute inflammation and capillary proliferation?,yes,/data/mn27889/pvqa/images/train/train_0154.jpg,No
+222,Are numerous islands of extramedullary hematopoiesis those of acute inflammation and capillary proliferation?,no,/data/mn27889/pvqa/images/train/train_0154.jpg,
+223,Does modified silver stain demonstrate clusters of tangled bacilli (black)?,yes,/data/mn27889/pvqa/images/train/train_0154.jpg,Yes
+224,Does the inner core of tan tissue demonstrate clusters of tangled bacilli (black)?,no,/data/mn27889/pvqa/images/train/train_0154.jpg,No
+225,"Does the histologic view show a thickened neointima overlying the stent wires (black diamond indicated by the arrow), which encroaches on the lumen (asterisk)?",yes,/data/mn27889/pvqa/images/train/train_0149.jpg,
+226,Does ischemic injury showing surface blebs show a thickened neointima overlying the stent wires black diamond encroaches on the lumen asterisk?,no,/data/mn27889/pvqa/images/train/train_0149.jpg,No
+227,Is the coarctation a segmental narrowing of the aorta?,yes,/data/mn27889/pvqa/images/train/train_0285.jpg,Yes
+228,Is schematic diagram of intimal thickening a segmental narrowing of the aorta?,no,/data/mn27889/pvqa/images/train/train_0285.jpg,No
+229,Do such lesions manifest later in life than preductal coarctations?,yes,/data/mn27889/pvqa/images/train/train_0285.jpg,
+230,Are the dilated ascending aorta and major branch vessels to the left of the coarctation?,yes,/data/mn27889/pvqa/images/train/train_0285.jpg,
+231,Are thrombus in the left and right ventricular apices to the left of the coarctation?,no,/data/mn27889/pvqa/images/train/train_0285.jpg,
+232,"Are the lower extremities perfused predominantly by way of dilated,  tortuous collateral channels?",yes,/data/mn27889/pvqa/images/train/train_0285.jpg,Yes
+233,"Are two helical spirochetes perfused predominantly by way of dilated,  tortuous collateral channels?",no,/data/mn27889/pvqa/images/train/train_0285.jpg,No
+234,Is granulation tissue characterized by loose connective tissue and abundant capillaries?,yes,/data/mn27889/pvqa/images/train/train_0471.jpg,No granulation tissue found in the image.
+235,Is this tumor characterized by loose connective tissue and abundant capillaries?,no,/data/mn27889/pvqa/images/train/train_0471.jpg,No
+236,Are a few residual cardiac muscle cells present?,yes,/data/mn27889/pvqa/images/train/train_0471.jpg,no
+237,Are proadiposity signals present?,no,/data/mn27889/pvqa/images/train/train_0471.jpg,no
+238,Is the posterior wall at the top?,yes,/data/mn27889/pvqa/images/train/train_0428.jpg,no
+239,Have the shape and volume of the left ventricle been distorted by the enlarged right ventricle?,yes,/data/mn27889/pvqa/images/train/train_0372.jpg,"No, the shape and volume of the left ventricle have not been distorted by the enlarged right ventricle."
+240,Has acute viral hepatitis been distorted by the enlarged right ventricle?,no,/data/mn27889/pvqa/images/train/train_0372.jpg,"No, the acute viral hepatitis has not been distorted by the enlarged right ventricle."
+241,Does one cusp have a partial fusion at its center?,yes,/data/mn27889/pvqa/images/train/train_0735.jpg,No
+242,Does Margin P have a partial fusion at its center?,no,/data/mn27889/pvqa/images/train/train_0735.jpg,No
+243,Is there marked left atrial dilation as seen from above the valve?,yes,/data/mn27889/pvqa/images/train/train_0600.jpg,Yes
+244,Is high-power view of another region marked left atrial dilation as seen from above the valve?,no,/data/mn27889/pvqa/images/train/train_0600.jpg,"No, high-power view of another region marked left atrial dilation as seen from above the valve."
+245,Is acute rheumatic mitral valvulitis superimposed on chronic rheumatic heart disease?,yes,/data/mn27889/pvqa/images/train/train_0613.jpg,No
+246,Is granulation tissue superimposed on chronic rheumatic heart disease?,no,/data/mn27889/pvqa/images/train/train_0613.jpg,No
+247,Are small vegetations visible along the line of closure of the mitral valve leaflets?,yes,/data/mn27889/pvqa/images/train/train_0613.jpg,No
+248,"Are others,  such as methylation of particular histone residues,  visible along the line of closure of the mitral valve leaflets?",no,/data/mn27889/pvqa/images/train/train_0613.jpg,No
+249,Have previous episodes of rheumatic valvulitis caused fibrous thickening and fusion of the chordae tendineae?,yes,/data/mn27889/pvqa/images/train/train_0613.jpg,
+250,Have the effector arms of these central circuits caused fibrous thickening and fusion of the chordae tendineae?,no,/data/mn27889/pvqa/images/train/train_0613.jpg,No
+251,Does the inflammation resolve?,yes,/data/mn27889/pvqa/images/train/train_0671.jpg,No inflammation found in the image.
+252,"Is the acute rheumatic fever phase of rheumatic heart disease marked by the appearance of small,  warty,  inflammatory vegetations along the lines of valve closure?",yes,/data/mn27889/pvqa/images/train/train_0671.jpg,Yes
+253,"Are some long-lived resident tissue macrophages marked by the appearance of small,  warty,  inflammatory vegetations along the lines of valve closure?",no,/data/mn27889/pvqa/images/train/train_0671.jpg,No long-lived resident tissue macrophages found in the image.
+254,"Is infective endocarditis characterized by large,  irregular,  often destructive masses that can extend from valve leaflets onto adjacent structures e.g.,  chordae or myocardium?",yes,/data/mn27889/pvqa/images/train/train_0671.jpg,No infective endocarditis found in the image.
+255,"Are acute rheumatic mitral valvulitis characterized by large,  irregular,  often destructive masses that can extend from valve leaflets onto adjacent structures e.g.,  chordae or myocardium?",no,/data/mn27889/pvqa/images/train/train_0671.jpg,No acute rheumatic mitral valvulitis found in the image.
+256,"Does non-bacterial thrombotic endocarditis manifest with small - to medium-sized,  bland,  nondestructive vegetations at the line of valve closure?",yes,/data/mn27889/pvqa/images/train/train_0671.jpg,Yes
+257,"Does one cusp manifest with small - to medium-sized,  bland,  nondestructive vegetations at the line of valve closure?",no,/data/mn27889/pvqa/images/train/train_0671.jpg,No
+258,Do these heal with scarring?,yes,/data/mn27889/pvqa/images/train/train_0671.jpg,Yes
+259,Do cohesive tumor in retina heal with scarring?,no,/data/mn27889/pvqa/images/train/train_0671.jpg,No cohesive tumor found in the retina.
+260,Is Libman-Sacks endocarditis characterized by small - to medium-sized inflammatory vegetations that can be attached on either side of the valve leaflets?,yes,/data/mn27889/pvqa/images/train/train_0671.jpg,Yes
+261,Is homogeneous or diffuse staining of nuclei characterized by small - to medium-sized inflammatory vegetations that can be attached on either side of the valve leaflets?,no,/data/mn27889/pvqa/images/train/train_0671.jpg,
+262,Is acute endocarditis caused by staphylococcus aureus on a congenitally bicuspid aortic valve with extensive cuspal destruction and ring abscess?,yes,/data/mn27889/pvqa/images/train/train_0296.jpg,
+263,Is acid-fast caused by staphylococcus aureus on a congenitally bicuspid aortic valve with extensive cuspal destruction and ring abscess?,no,/data/mn27889/pvqa/images/train/train_0296.jpg,
+264,Is the thrombus only loosely attached to the cusp?,yes,/data/mn27889/pvqa/images/train/train_0744.jpg,No thrombus found on the cusp in the image.
+265,Is gram only loosely attached to the cusp?,no,/data/mn27889/pvqa/images/train/train_0744.jpg,No
+266,Is collagen blue in this Masson trichrome-stained preparation?,yes,/data/mn27889/pvqa/images/train/train_0667.jpg,Yes
+267,Is Margin P blue in this Masson trichrome-stained preparation?,no,/data/mn27889/pvqa/images/train/train_0667.jpg,No
+268,Does the congested portion of the ileum stain?,no,/data/mn27889/pvqa/images/train/train_0543.jpg,No
+269,"Is the right ventricle markedly dilated with focal,  almost transmural replacement of the free wall by adipose tissue and fibrosis?",yes,/data/mn27889/pvqa/images/train/train_0531.jpg,Yes
+270,Does the left ventricle have a grossly normal appearance in this heart?,yes,/data/mn27889/pvqa/images/train/train_0531.jpg,Yes
+271,Does fish use a fluorescein-labeled cosmid probe for n-myc on a tissue section containing neuroblastoma have a grossly normal appearance in this heart?,no,/data/mn27889/pvqa/images/train/train_0531.jpg,No
+272,Does the injurious stimulus have a grossly normal appearance in this heart?,no,/data/mn27889/pvqa/images/train/train_0531.jpg,Yes
+273,Is the left atrium enlarged?,yes,/data/mn27889/pvqa/images/train/train_0599.jpg,Yes
+274,Is a liver enlarged?,no,/data/mn27889/pvqa/images/train/train_0599.jpg,Yes
+275,"Does the septal muscle bulge into the left ventricular outflow tract,  giving rise to a banana-shaped ventricular lumen?",yes,/data/mn27889/pvqa/images/train/train_0599.jpg,
+276,"Does acute endocarditis bulge into the left ventricular outflow tract,  giving rise to a banana-shaped ventricular lumen?",no,/data/mn27889/pvqa/images/train/train_0599.jpg,No
+277,Has the anterior mitral leaflet been moved away from the septum to reveal a fibrous endocardial plaque see text?,yes,/data/mn27889/pvqa/images/train/train_0599.jpg,
+278,Has low-power view of a cross section of a skin blister showing the epidermis been moved away from the septum to reveal a fibrous endocardial plaque see text?,no,/data/mn27889/pvqa/images/train/train_0599.jpg,
+279,"Is a myofiber distended with trypanosomes present,  along with mononuclear inflammation and myofiber necrosis?",yes,/data/mn27889/pvqa/images/train/train_0487.jpg,No
+280,"Are necrotic cells present,  along with mononuclear inflammation and myofiber necrosis?",no,/data/mn27889/pvqa/images/train/train_0487.jpg,no
+281,"Does low magnification show sickle cells,  anisocytosis,  poikilocytosis,  and target cells?",yes,/data/mn27889/pvqa/images/train/train_0426.jpg,Yes
+282,"Does the cause of reversible injury show sickle cells,  anisocytosis,  poikilocytosis,  and target cells?",no,/data/mn27889/pvqa/images/train/train_0426.jpg,No cause of reversible injury found in the image.
+283,Do the splenic macrophages pluck out these inclusions?,yes,/data/mn27889/pvqa/images/train/train_0479.jpg,No
+284,Do the segregation of b cells and t cells in different regions of the lymph node pluck out these inclusions?,no,/data/mn27889/pvqa/images/train/train_0479.jpg,"No, the segregation of b cells and t cells in different regions of the lymph node does not pluck out these inclusions."
+285,Are bite cells similar to the one in this smear produced?,yes,/data/mn27889/pvqa/images/train/train_0479.jpg,
+286,Are numerous islands of extramedullary hematopoiesis produced?,no,/data/mn27889/pvqa/images/train/train_0479.jpg,No
+287,Does this specimen from a patient with hemolytic uremic syndrome contain several fragmented red cells?,yes,/data/mn27889/pvqa/images/train/train_0607.jpg,Yes
+288,Do those with tumors that had mycn amplification contain several fragmented red cells?,no,/data/mn27889/pvqa/images/train/train_0607.jpg,No
+289,"Does scattered,  fully hemoglobinized cells,  from a recent blood transfusion,  stand out in contrast?",yes,/data/mn27889/pvqa/images/train/train_0605.jpg,
+290,Do the principal cellular alterations that characterize reversible cell injury and necrosis stand out in contrast?,no,/data/mn27889/pvqa/images/train/train_0605.jpg,Not enough information in the image to answer the question.
+291,Does the absence of staining result for the ALL shown in the figure?,no,/data/mn27889/pvqa/images/train/train_0477.jpg,No
+292,"Is CD10 a marker expressed on a subset of ALLs,  and TdT a specialized DNA polymerase that is expressed in pre-B and pre-T cells?",yes,/data/mn27889/pvqa/images/train/train_0477.jpg,
+293,Are the tumor cells positive for the B cell markers CD19 and CD22 ?,yes,/data/mn27889/pvqa/images/train/train_0477.jpg,No
+294,Is this specimen from a patient with hemolytic uremic syndrome positive for the B cell markers CD19 and CD22 ?,no,/data/mn27889/pvqa/images/train/train_0477.jpg,No specimen found in the image.
+295,Does the low-power view show diffuse effacement of nodal architecture?,yes,/data/mn27889/pvqa/images/train/train_0360.jpg,Yes
+296,Does the vessel wall show diffuse effacement of nodal architecture?,no,/data/mn27889/pvqa/images/train/train_0360.jpg,Yes
+297,"Do a majority of the tumor cells have the appearance of small,  round lymphocytes at high power?",yes,/data/mn27889/pvqa/images/train/train_0366.jpg,no
+298,"Do the photomicrographs have the appearance of small,  round lymphocytes at high power?",no,/data/mn27889/pvqa/images/train/train_0366.jpg,Yes
+299,"Is a prolymphocyte, a larger cell with a centrally placed nucleolus,  present in this field?",yes,/data/mn27889/pvqa/images/train/train_0366.jpg,no
+300,Is sci transl present in this field?,no,/data/mn27889/pvqa/images/train/train_0366.jpg,no
+301,Do the tumor cells have large nuclei with open chromatin and prominent nucleoli?,yes,/data/mn27889/pvqa/images/train/train_0673.jpg,Yes
+302,Do neutrophils have large nuclei with open chromatin and prominent nucleoli?,no,/data/mn27889/pvqa/images/train/train_0673.jpg,Yes
+303,"Are the tumor cells and their nuclei fairly uniform,  giving a monotonous appearance?",yes,/data/mn27889/pvqa/images/train/train_0676.jpg,no
+304,"Are the principal cellular alterations that characterize reversible cell injury and necrosis fairly uniform,  giving a monotonous appearance?",no,/data/mn27889/pvqa/images/train/train_0676.jpg,No
+305,"Is the starry sky pattern produced by interspersed,  lightly staining, normal microphages?",yes,/data/mn27889/pvqa/images/train/train_0676.jpg,No
+306,"Are infective endocarditis produced by interspersed,  lightly staining, normal microphages?",no,/data/mn27889/pvqa/images/train/train_0676.jpg,No infective endocarditis found in the image.
+307,Are normal macrophages better appreciated at a lower magnification?,yes,/data/mn27889/pvqa/images/train/train_0676.jpg,
+308,Are those with tumors that had mycn amplification better appreciated at a lower magnification?,no,/data/mn27889/pvqa/images/train/train_0676.jpg,no
+309,Are the sharply punched-out bone defects most obvious in the calvaria?,yes,/data/mn27889/pvqa/images/train/train_0568.jpg,No
+310,Are t_h2 cells most obvious in the calvaria?,no,/data/mn27889/pvqa/images/train/train_0568.jpg,No
+311,"Are normal marrow cells largely replaced by plasma cells,  including atypical forms with multiple nuclei,  prominent nucleoli,  and cyto-plasmic droplets containing immunoglobulin?",yes,/data/mn27889/pvqa/images/train/train_0509.jpg,
+312,"Are the available anabolic circuits largely replaced by plasma cells,  including atypical forms with multiple nuclei,  prominent nucleoli,  and cyto-plasmic droplets containing immunoglobulin?",no,/data/mn27889/pvqa/images/train/train_0509.jpg,
+313,Do the neo-plastic promyelocytes have abnormally coarse and numerous azurophilic granules?,yes,/data/mn27889/pvqa/images/train/train_0324.jpg,Yes
+314,Do other characteristic findings include a cell in the center of the field with multiple needlelike Auer rods?,yes,/data/mn27889/pvqa/images/train/train_0324.jpg,Yes
+315,Do infected cells include a cell in the center of the field with multiple needlelike Auer rods?,no,/data/mn27889/pvqa/images/train/train_0324.jpg,No
+316,Are granulocytic forms at various stages of differentiation presented?,yes,/data/mn27889/pvqa/images/train/train_0715.jpg,no
+317,Are two nucleated erythroid precursors and several teardrop-shaped red cells evident?,yes,/data/mn27889/pvqa/images/train/train_0775.jpg,Yes
+318,Were immature myeloid cells present in other fields?,yes,/data/mn27889/pvqa/images/train/train_0775.jpg,No
+319,Was a myofiber distended with trypanosomes present in other fields?,no,/data/mn27889/pvqa/images/train/train_0775.jpg,No
+320,Do the release of macrophage-derived fibrogenic cytokines such as transforming growth factor-beta stimulate fibroblast growth and collagen deposition associated with the healing phase of injury?,yes,/data/mn27889/pvqa/images/train/train_0707.jpg,
+321,Do the dark green polypeptides stimulate fibroblast growth and collagen deposition associated with the healing phase of injury?,no,/data/mn27889/pvqa/images/train/train_0707.jpg,
+322,Are the principal cellular alterations that characterize reversible cell injury and necrosis distended?,no,/data/mn27889/pvqa/images/train/train_0647.jpg,Yes
+323,"Are some alveoli collapsed,  while others are distended?",yes,/data/mn27889/pvqa/images/train/train_0647.jpg,Yes
+324,"Is a prolymphocyte, a larger cell with a centrally placed nucleolus,  lined by bright pink hyaline membranes?",no,/data/mn27889/pvqa/images/train/train_0647.jpg,Yes
+325,"Does the bronchial biopsy specimen from an asthmatic patient show sub-basement membrane fibrosis,  eosinophilic inflammation?",yes,/data/mn27889/pvqa/images/train/train_0450.jpg,No
+326,"Do renal tubular epithelial cells in the lower half of the photograph show sub-basement membrane fibrosis,  eosinophilic inflammation?",no,/data/mn27889/pvqa/images/train/train_0450.jpg,No
+327,Does the cut surface of lung show markedly dilated bronchi filled with purulent mucus that extend to subpleural regions?,yes,/data/mn27889/pvqa/images/train/train_0260.jpg,No
+328,"Does a diagnostic,  binucleate reed-sternberg cell show markedly dilated bronchi filled with purulent mucus that extend to subpleural regions?",no,/data/mn27889/pvqa/images/train/train_0260.jpg,No
+329,"Is the fibrosis,  which varies in intensity,  more pronounced in the subpleural region?",yes,/data/mn27889/pvqa/images/train/train_0326.jpg,
+330,Is failure to stain more pronounced in the subpleural region?,no,/data/mn27889/pvqa/images/train/train_0326.jpg,
+331,Is honey-combing present to the left?,yes,/data/mn27889/pvqa/images/train/train_0393.jpg,No honey-combing found to the left.
+332,Is schematic diagram of intimal thickening present to the left?,no,/data/mn27889/pvqa/images/train/train_0393.jpg,No schematic diagram of intimal thickening found in the image.
+333,Is a large amount of black pigment associated with fibrosis?,yes,/data/mn27889/pvqa/images/train/train_0331.jpg,No
+334,Is high-power view of another region associated with fibrosis?,no,/data/mn27889/pvqa/images/train/train_0331.jpg,No
+335,Has scarring contracted the upper lobe into a small dark mass?,yes,/data/mn27889/pvqa/images/train/train_0504.jpg,Yes
+336,Has the palisade of cartilage contracted the upper lobe into a small dark mass?,no,/data/mn27889/pvqa/images/train/train_0504.jpg,No
+337,Does the high-power detail of an asbestos body reveal the typical beading and knobbed ends?,yes,/data/mn27889/pvqa/images/train/train_0397.jpg,No high-power detail of an asbestos body found in the image.
+338,Did fatty streak in an experimental hypercholesterolemic rabbit reveal the typical beading and knobbed ends?,no,/data/mn27889/pvqa/images/train/train_0397.jpg,No
+339,Are characteristic peribronchial noncaseating granulomas with many giant cells present?,yes,/data/mn27889/pvqa/images/train/train_0566.jpg,No
+340,Are t_h 17 cells in granuloma formation present?,no,/data/mn27889/pvqa/images/train/train_0566.jpg,no
+341,Are loosely formed interstitial granulomas and chronic inflammation characteristic?,yes,/data/mn27889/pvqa/images/train/train_0511.jpg,No
+342,Are histologic features characteristic?,no,/data/mn27889/pvqa/images/train/train_0511.jpg,no
+343,Is there accumulation of large numbers of macrophages within the alveolar spaces with only slight fibrous thickening of the alveolar walls?,yes,/data/mn27889/pvqa/images/train/train_0505.jpg,
+344,"Has the tissue been stained with Prussian blue,  an iron stain that highlights the abundant intracellular hemo-siderin?",yes,/data/mn27889/pvqa/images/train/train_0332.jpg,No
+345,"Has the acute myocardial infarct of the posterolateral left ventricle been stained with Prussian blue,  an iron stain that highlights the abundant intracellular hemo-siderin?",no,/data/mn27889/pvqa/images/train/train_0332.jpg,No acute myocardial infarct of the posterolateral left ventricle found in the image.
+346,Is the lower lobe uniformly consolidated?,yes,/data/mn27889/pvqa/images/train/train_0714.jpg,No
+347,Is the left ventricle uniformly consolidated?,no,/data/mn27889/pvqa/images/train/train_0714.jpg,No
+348,Do the congested septal capillaries and extensive neutrophil exudation into alveoli correspond to early red hepatization?,yes,/data/mn27889/pvqa/images/train/train_0777.jpg,No
+349,Do signals correspond to early red hepatization?,no,/data/mn27889/pvqa/images/train/train_0777.jpg,No
+350,Have Fibrin nets not yet formed?,yes,/data/mn27889/pvqa/images/train/train_0777.jpg,"Yes, Fibrin nets have not yet formed."
+351,Have panels c and d not yet formed?,no,/data/mn27889/pvqa/images/train/train_0777.jpg,Yes
+352,Is early organization of intraalveolar exudate seen?,yes,/data/mn27889/pvqa/images/train/train_0058.jpg,Yes
+353,Is the gray-white parenchymal focus under the pleura in the lower part of the upper lobe?,yes,/data/mn27889/pvqa/images/train/train_0003.jpg,
+354,Is scarring under the pleura in the lower part of the upper lobe?,no,/data/mn27889/pvqa/images/train/train_0003.jpg,
+355,Are hilar lymph nodes with caseation seen left?,yes,/data/mn27889/pvqa/images/train/train_0003.jpg,No
+356,Are two helical spirochetes seen left?,no,/data/mn27889/pvqa/images/train/train_0003.jpg,No
+357,Are sheets of macrophages packed with mycobacteria seen in this specimen from an immunosuppressed patient?,yes,/data/mn27889/pvqa/images/train/train_0187.jpg,No
+358,Are the media of the artery seen in this specimen from an immunosuppressed patient?,no,/data/mn27889/pvqa/images/train/train_0187.jpg,No artery found in the image.
+359,Are the upper parts of both lungs riddled with gray-white areas of caseation and multiple areas of softening and cavitation?,yes,/data/mn27889/pvqa/images/train/train_0892.jpg,No
+360,Are the segregation of b cells and t cells in different regions of the lymph node riddled with gray-white areas of caseation and multiple areas of softening and cavitation?,no,/data/mn27889/pvqa/images/train/train_0892.jpg,
+361,Does the cut surface show numerous gray-white granulomas?,yes,/data/mn27889/pvqa/images/train/train_0848.jpg,Yes
+362,Does the congested portion of the ileum show numerous gray-white granulomas?,no,/data/mn27889/pvqa/images/train/train_0848.jpg,No
+363,Do histoplasma capsulatum yeast forms fill phagocytes in a lymph node of a patient with disseminated histoplasmosis silver stain?,yes,/data/mn27889/pvqa/images/train/train_0185.jpg,
