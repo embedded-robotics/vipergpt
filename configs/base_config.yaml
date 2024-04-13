@@ -18,7 +18,7 @@ load_models:                                        # Which pretrained models to
     gpt3_qa: True
     gpt3_general: True
     depth: False
-    blip: True
+    blip: False
     saliency: False
     xvlm: False
     codex: True
