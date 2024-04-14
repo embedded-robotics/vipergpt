@@ -11,6 +11,8 @@ class ImagePatch:
 
     Methods
     -------
+    find_histo_patches(self)->list[ImagePatch]
+        If the image is a pathology image, it returns a list of ImagePatch objects containing image crops densely populated with pathology information i.e,. cell nuclei . Otherwise, returns a list with single ImagePatch object containing the original crop.
     find_plip(object_name: str)->list[ImagePatch]
         Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
     exists_plip(object_name: str)->bool
