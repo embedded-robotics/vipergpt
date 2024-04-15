@@ -23,6 +23,7 @@ load_models:                                        # Which pretrained models to
     xvlm: False
     codex: True
     plip: True
+    llava_med: True
 
 detect_thresholds:                                  # Thresholds for the models that perform detection
     glip: 0.5

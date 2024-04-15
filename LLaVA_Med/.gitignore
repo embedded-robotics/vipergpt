@@ -1,0 +1,6 @@
+*.pyc
+*.zip
+llava.egg-info/
+pvqa-9epoch_delta/
+*.cpython-310.pyc
+

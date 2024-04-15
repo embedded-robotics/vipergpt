@@ -351,7 +351,18 @@ class ImagePatch:
             return [self.crop(coordinates[0], coordinates[3], coordinates[2], coordinates[1]) for coordinates in selected_coordinates]
         else:
             return [ImagePatch(image=self.cropped_image, queues=self.queues, parent_img_patch=self)]
-
+    def llava_med_query(self, question: str) -> str:
+        # TODO: Modify the docstring
+        """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
+        to "What is this?". The questions are about basic perception, and are not meant to be used for complex reasoning
+        or external knowledge.
+        Parameters
+        -------
+        question : str
+            A string describing the question to be asked.
+        """
+        return self.forward('llava_med', self.cropped_image, question)
+    
     def find_plip(self, object_name: str) -> list[ImagePatch]:
         """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
         This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.

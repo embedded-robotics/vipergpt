@@ -1511,3 +1511,17 @@ class XVLMModel(BaseModel):
         else:  # binary
             score = self.binary_score(image, text, negative_categories=negative_categories)
         return score.cpu()
+
+
+# new implementation of LLaVAM
+class LLaVAMedModel(BaseModel):
+    name = 'llava_med'
+
+    def __init__(self, gpu_number=0, model_path="/data/mn27889/.cache/huggingface/hub/llava_med_pvqa"):
+        super().__init__(gpu_number)
+        import sys
+        sys.path.append('LLaVA_Med') 
+        from llava_med import LlavaMedInference
+        self.model = LlavaMedInference(model_path)
+    def forward(self, image, question):
+        return self.model.forward(image, question)
