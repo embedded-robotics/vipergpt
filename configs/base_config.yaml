@@ -24,6 +24,7 @@ load_models:                                        # Which pretrained models to
     codex: True
     plip: True
     llava_med: True
+    histocartography: True
 
 detect_thresholds:                                  # Thresholds for the models that perform detection
     glip: 0.5
