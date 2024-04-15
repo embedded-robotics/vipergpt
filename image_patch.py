@@ -13,7 +13,6 @@ from word2number import w2n
 
 from utils import show_single_image, load_json
 from vision_processes import forward, config
-from histocartography.preprocessing import NucleiExtractor, DeepFeatureExtractor, KNNGraphBuilder
 
 console = Console(highlight=False)
 
@@ -280,78 +279,7 @@ class ImagePatch:
         List[ImagePatch]
             a list of ImagePatch objects containing image crops densely populated with pathology information within the original crop
         """
-        
-        # # Converting the cropped image into an numpy array
-        # query_image = np.array(self.cropped_image)
-        # nuclei_map, nuclei_centers = self.nuclei_detector.process(query_image)
-        
-        # # Only consider if more than 5 nuclei are detected since knn needs to form a graph using 5 neighbors.
-        # # If less than 5 nuclei are present, most of the images are not pathology related
-        # if nuclei_centers.shape[0] > 5:
-        #     # Get the Features
-        #     features = self.feats_extractor.process(query_image, nuclei_map)
-            
-        #     # Make Cell Graph
-        #     cell_graph = self.knn_graph_builder.process(nuclei_map, features)
-            
-        #     # Make calculations to extract patches and the overlap images
-        #     width, height = self.cropped_image.size
-        #     width_range = np.linspace(0, width, 4, dtype=int)
-        #     height_range = np.linspace(0, height, 4, dtype=int)
 
-        #     overlap_percent = 20
-        #     width_overlap = int((overlap_percent/100) * width)
-        #     height_overlap = int((overlap_percent/100) * height)
-            
-        #     # Extract the patch coordinates
-        #     image_patch_coordinates = []
-        #     patch_nuclei_centers = []
-        #     for i in range(len(width_range)-1):
-        #         for j in range(len(height_range)-1):
-        #             # Consider the overlap width from second patch only
-        #             if i != 0:
-        #                 start_width = width_range[i] - width_overlap
-        #             else:
-        #                 start_width = width_range[i]
-
-        #             # Consider the overlap height from second patch only
-        #             if j != 0:
-        #                 start_height = height_range[j] - height_overlap
-        #             else:
-        #                 start_height = height_range[j]
-                    
-        #             # List out the patch ranges
-        #             left = start_width
-        #             upper = start_height
-        #             right = width_range[i+1]
-        #             lower = height_range[j+1]
-                    
-        #             center_list = []
-        #             for center in nuclei_centers:
-        #                 if ((center[0] >= left) and (center[0] <=right) and 
-        #                     (center[1] >= upper) and (center[1] <=lower)):
-        #                     center_list.append(center)
-
-        #             image_patch_coordinates.append((left, upper, right, lower))
-        #             patch_nuclei_centers.append(center_list)
-            
-        #     # Calculate the length of nuclei in each patch
-        #     patch_center_length = []
-        #     for center in patch_nuclei_centers:
-        #         patch_center_length.append(len(center))
-            
-        #     # Sort the patch indices based on maximum number of nuclei
-        #     sorted_indices_desc = np.flip(np.argsort(patch_center_length))
-            
-        #     # Return the Top 3 selected coordinates
-        #     selected_coordinates = []
-        #     for patch_index in range(0,3):
-        #         selected_coordinates.append(image_patch_coordinates[sorted_indices_desc[patch_index]])
-            
-        #     return [self.crop(coordinates[0], coordinates[3], coordinates[2], coordinates[1]) for coordinates in selected_coordinates]
-        # else:
-        #     return [ImagePatch(image=self.cropped_image, queues=self.queues, parent_img_patch=self)]
-        
         all_object_coordinates = self.forward('histocartography', self.cropped_image)
         return [self.crop(coordinates[0], coordinates[3], coordinates[2], coordinates[1]) for coordinates in all_object_coordinates]
         
