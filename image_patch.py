@@ -284,9 +284,8 @@ class ImagePatch:
         return [self.crop(coordinates[0], coordinates[3], coordinates[2], coordinates[1]) for coordinates in all_object_coordinates]
         
     def llava_med_query(self, question: str) -> str:
-        # TODO: Modify the docstring
-        """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
-        to "What is this?". The questions are about basic perception, and are not meant to be used for complex reasoning
+        """Returns the answer to a pathology question asked about the image. 
+        The questions are about basic perception, and are not meant to be used for complex reasoning
         or external knowledge.
         Parameters
         -------
