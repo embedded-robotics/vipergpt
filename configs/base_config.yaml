@@ -22,7 +22,7 @@ load_models:                                        # Which pretrained models to
     saliency: False
     xvlm: False
     codex: True
-    plip: True
+    plip: False
     llava_med: True
     histocartography: True
 

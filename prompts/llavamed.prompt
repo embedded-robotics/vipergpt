@@ -13,15 +13,6 @@ class ImagePatch:
     -------
     find_histo_patches(self)->list[ImagePatch]
         If the image is a pathology image, it returns a list of ImagePatch objects containing image crops densely populated with pathology information i.e,. cell nuclei . Otherwise, returns a list with single ImagePatch object containing the original crop.
-    find_plip(object_name: str)->list[ImagePatch]
-        Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
-    exists_plip(object_name: str)->bool
-        Returns True if the object specified by object_name is found in the image, and False otherwise.
-    verify_property_plip(object_name, attribute)->bool
-        Returns True if the object possesses the property, and False otherwise. Differs from 'exists' in that it presupposes the existence of the object
-        specified by object_name, instead checking whether the object possesses the property specified by attribute
-    best_text_match_plip(option_list: List[str], prefix: str)->str
-        Returns the string that best matches the image. This calls a specialized model for pathology images.
     simple_query(question: str=None)->str
         Returns the answer to a basic question asked about the image. If no question is provided, returns the answer to "What is this?".
     llm_query(question: str, long_answer: bool)->str
@@ -118,174 +109,6 @@ class ImagePatch:
         >>>          answers.append(patch.llava_med_query(question))
         >>>      return image_patch.llm_query(" ".join(answers) + " Please summarize these information.")
 
-    def find_plip(self, object_name: str) -> list[ImagePatch]:
-        """Returns a list of ImagePatch objects matching object_name contained in the crop if any are found. Otherwise, returns an empty list.
-        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
-
-        Parameters
-        ----------
-        object_name : str
-            the name of the object to be found
-
-        Returns
-        -------
-        List[ImagePatch]
-            a list of ImagePatch objects matching object_name contained in the crop
-
-        Examples
-        --------
-
-        >>> # return the cancer patches
-        >>> def execute_command(image) -> List[ImagePatch]:
-        >>>     image_patch = ImagePatch(image)
-        >>>     cancer_patches = image_patch.find_plip("cancer")
-        >>>     return cancer_patches
-
-        >>> # Do the histone subunits represent foci of fat necrosis with calcium soap formation at sites of lipid breakdown in the mesentery?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     histone_patches = image_patch.find_plip("histone subunits")
-        >>>     fat_necrosis_patches = image_patch.find_plip("foci of fat necrosis")
-        >>>     calcium_soap_patches = image_patch.find_plip("calcium soap formation")
-        >>>     lipid_breakdown_patches = image_patch.find_plip("sites of lipid breakdown")
-        >>>     if histone_patches and fat_necrosis_patches and calcium_soap_patches and lipid_breakdown_patches:
-        >>>         return "Yes"
-        >>>     else:
-        >>>         return "No"
-
-        >>> # Where is the increased fibrosis?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     fibrosis_patches = image_patch.find_plip("increased fibrosis")
-        >>>     if len(fibrosis_patches) == 0:
-        >>>         return "No increased fibrosis found in the image."
-        >>>     else:
-        >>>         fibrosis_locations = []
-        >>>         for patch in fibrosis_patches:
-        >>>             fibrosis_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
-        >>>         return fibrosis_locations
-
-        >>> # Where are dilated and congested?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     dilated_patches = image_patch.find_plip("dilated")
-        >>>     congested_patches = image_patch.find_plip("congested")
-        >>>     dilated_and_congested_patches = [patch for patch in dilated_patches if patch in congested_patches]
-        >>>     if len(dilated_and_congested_patches) == 0:
-        >>>         return "No dilated and congested areas found in the image."
-        >>>     else:
-        >>>         dilated_and_congested_locations = []
-        >>>         for patch in dilated_and_congested_patches:
-        >>>             dilated_and_congested_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
-        >>>         return dilated_and_congested_locations
-        """
-        return find_plip(self.cropped_image, object_name)
-
-    def exists_plip(self, object_name: str) -> bool:
-        """Returns True if the object specified by object_name is found in the image, and False otherwise.
-        Parameters
-        -------
-        object_name : str
-            A string describing the name of the object to be found in the image.
-
-        Examples
-        -------
-
-        >>> # Are dilated and congested sinuses present in the photo?
-        >>> def execute_command(image)->str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     is_dilated = image_patch.exists_plip("dilated sinuses")
-        >>>     is_congested = image_patch.exists_plip("congested sinuses")
-        >>>     return bool_to_yesno(is_dilated and is_congested)
-        """
-        return exists_plip(self.cropped_image, object_name)
-
-    def verify_property_plip(self, object_name: str, visual_property: str) -> bool:
-        """
-        Returns True if the object possesses the property, and False otherwise.
-        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
-        checking whether the object possesses the property.
-
-        Parameters
-        -------
-        object_name : str
-            A string describing the name of the object to be found in the image.
-        visual_property : str
-            A string describing the visual property to be checked within the object
-
-        Examples
-        -------
-
-        >>> # Are the arteries swollen?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     arteries_patches = image_patch.find_plip("arteries")
-        >>>     # Question assumes that arteries are present in each patch
-        >>>     filtered_patch = best_image_match_plip(arteries_patches, "arteries")
-        >>>     return bool_to_yesno(filtered_patch.verify_property_plip("arteries", "swollen"))
-
-        >>> # Is the cellular adaptation depicted here hypertrophy?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     adaptation_patches = image_patch.find_plip("cellular adaptation")
-        >>>     adaptation_patch = best_image_match_plip(adaptation_patches, "cellular adaptation")
-        >>>     return bool_to_yesno(adaptation_patch.verify_property_plip("cellular adaptation", "hypertrophy"))
-
-        >>> # Is the irreversible injury ischemic coagulative necrosis?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     necrosis_patches = image_patch.find_plip("necrosis")
-        >>>     necrosis_patch = best_image_match_plip(necrosis_patches, "necrosis")
-        >>>     return bool_to_yesno(necrosis_patch.verify_property_plip("necrosis", "ischemic coagulative necrosis"))
-
-        >>> # Does reversibly injured myocardium show functional effects without any gross or light microscopic changes, or reversible changes such as cellular swelling and fatty change?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     myocardium_patches = image_patch.find_plip("reversibly injured myocardium")
-        >>>     if len(myocardium_patches) == 0:
-        >>>         return "No"
-        >>>     for myocardium_patch in myocardium_patches:
-        >>>         if myocardium_patch.verify_property_plip("reversibly injured myocardium", "functional effects"):
-        >>>             return "Yes"
-        >>>     return "No"
-
-        >>> # Where is the wedge-shaped infarct slightly depressed?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     infarct_patches = image_patch.find_plip("wedge-shaped infarct")
-        >>>     if len(infarct_patches) == 0:
-        >>>         return "No wedge-shaped infarct found in the image."
-        >>>     else:
-        >>>         depressed_infarct_patches = [patch for patch in infarct_patches if patch.verify_property_plip("wedge-shaped infarct", "depressed")]
-        >>>         if len(depressed_infarct_patches) == 0:
-        >>>             return "No depressed wedge-shaped infarct found in the image."
-        >>>         else:
-        >>>             depressed_infarct_locations = []
-        >>>             for patch in depressed_infarct_patches:
-        >>>                 depressed_infarct_locations.append(f"Location: Left-{patch.left}, Right-{patch.right}, Upper-{patch.upper}, Lower-{patch.lower}")
-        >>>             return depressed_infarct_locations
-        """
-        return verify_property_plip(self.cropped_image, object_name, visual_property)
-
-    def best_text_match_plip(self, option_list: List[str]) -> str:
-        """Returns the string that best matches the image.
-        Parameters
-        -------
-        option_list : str
-            A list with the names of the different options
-
-        Examples
-        -------
-
-        >>> # Is the foo gold or white?
-        >>> def execute_command(image)->str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     foo_patches = image_patch.find_plip("foo")
-        >>>     # Question assumes atleast one foo patch
-        >>>     filtered_patch = best_image_match_plip(foo_patches, "foo")
-        >>>     return filtered_patch.best_text_match_plip(["gold", "white"])
-        """
-        return best_text_match_plip(self.cropped_image, option_list)
 
     def simple_query(self, question: str = None) -> str:
         """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
@@ -297,31 +120,16 @@ class ImagePatch:
             A string describing the question to be asked.
 
         Examples
-        -------
-
-        >>> # Which kind of baz is not fredding?
+        --------
+        >>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
         >>> def execute_command(image) -> str:
         >>>     image_patch = ImagePatch(image)
-        >>>     baz_patches = image_patch.find_plip("baz")
-        >>>     for baz_patch in baz_patches:
-        >>>         if not baz_patch.verify_property_plip("baz", "fredding"):
-        >>>             return baz_patch.simple_query("What is this baz?")
-
-        >>> # What color is the foo?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     foo_patches = image_patch.find_plip("foo")
-        >>>     foo_patch = best_image_match_plip(foo_patches, "foo")
-        >>>     return foo_patch.simple_query("What is the color?")
-
-        >>> # Is the second bar from the left quuxy?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     bar_patches = image_patch.find_plip("bar")
-        >>>     bar_patches.sort(key=lambda x: x.horizontal_center)
-        >>>     bar_patch = bar_patches[1]
-        >>>     return bar_patch.simple_query("Is the bar quuxy?")
-        """
+        >>>     key_patches = image_patch.find_histo_patches()
+        >>>     answers = []
+        >>>     for patch in key_patches:
+        >>>          answers.append(patch.llava_med_query(question))
+        >>>      return image_patch.llm_query(" ".join(answers) + " Please summarize these information.")
+      
         return simple_query(self.cropped_image, question)
 
     def crop(self, left: int, lower: int, right: int, upper: int) -> ImagePatch:
@@ -347,29 +155,6 @@ class ImagePatch:
         bool
             True if a crop with the given coordinates overlaps with this one, else False
 
-        Examples
-        --------
-        >>> # black foo on top of the qux
-        >>> def execute_command(image) -> ImagePatch:
-        >>>     image_patch = ImagePatch(image)
-        >>>     qux_patches = image_patch.find_plip("qux")
-        >>>     qux_patch = best_image_match_plip(qux_patches, "foo")
-        >>>     foo_patches = image_patch.find_plip("black foo")
-        >>>     for foo in foo_patches:
-        >>>         if foo.vertical_center > qux_patch.vertical_center
-        >>>             return foo
-
-        >>> # Is there an infarct in the brain hypertrophy?
-        >>> def execute_command(image):
-        >>>     image_patch = ImagePatch(image)
-        >>>     infarct_patches = image_patch.find_plip("infarct")
-        >>>     hypertrophy_patches = image_patch.find_plip("brain hypertrophy")
-        >>>     for infarct_patch in infarct_patches:
-        >>>         for hypertrophy_patch in hypertrophy_patches:
-        >>>             if infarct_patch.overlaps_with(hypertrophy_patch.left, hypertrophy_patch.lower, hypertrophy_patch.right, hypertrophy_patch.upper):
-        >>>                 return "yes"
-        >>>     return "no"
-        """
         return self.left <= right and self.right >= left and self.lower <= upper and self.upper >= lower
 
     def llm_query(self, question: str, long_answer: bool = True) -> str:
@@ -383,100 +168,10 @@ class ImagePatch:
             whether to return a short answer or a long answer. Short answers are one or at most two words, very concise.
             Long answers are longer, and may be paragraphs and explanations. Defalt is True (so long answer).
 
-        Examples
-        --------
 
-        >>> # What is the city this building is in?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     building_patches = image_patch.find_plip("building")
-        >>>     building_patch = best_image_match_plip(building_patches, "building")
-        >>>     building_name = building_patch.simple_query("What is the name of the building?")
-        >>>     return building_patch.llm_query(f"What city is {building_name} in?", long_answer=False)
-
-        >>> # Who invented this object?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     object_patches = image_patch.find_plip("object")
-        >>>     object_patch = best_image_match_plip(object_patches, "building")
-        >>>     object_name = object_patch.simple_query("What is the name of the object?")
-        >>>     return object_patch.llm_query(f"Who invented {object_name}?", long_answer=False)
-
-        >>> # Explain the history behind this object.
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     object_patches = image_patch.find_plip("object")
-        >>>     object_patch = best_image_match_plip(object_patches, "building")
-        >>>     object_name = object_patch.simple_query("What is the name of the object?")
-        >>>     return object_patch.llm_query(f"What is the history behind {object_name}?", long_answer=True)
-        """
         return llm_query(question, long_answer)
 
 
-def best_image_match_plip(patch_list: list[ImagePatch], content: str) -> ImagePatch:
-    """Returns the patch most likely to contain the content.
-    Parameters
-    ----------
-    list_patches : List[ImagePatch]
-    content : str
-        the object of interest
-
-    Returns
-    -------
-    ImagePatch most likely to contain the object
-
-    Examples
-    --------
-
-    >>> # Is the cellular adaptation depicted here hypertrophy?
-    >>> def execute_command(image):
-    >>>     image_patch = ImagePatch(image)
-    >>>     adaptation_patches = image_patch.find_plip("cellular adaptation")
-    >>>     adaptation_patch = best_image_match_plip(adaptation_patches, "cellular adaptation")
-    >>>     return bool_to_yesno(adaptation_patch.verify_property_plip("cellular adaptation", "hypertrophy"))
-
-    >>> # Does an infarct in the brain show dissolution of the tissue?
-    >>> def execute_command(image):
-    >>>     image_patch = ImagePatch(image)
-    >>>     infarct_patches = image_patch.find_plip("infarct")
-    >>>     if infarct_patches:
-    >>>         infarct_patch = best_image_match_plip(infarct_patches, "infarct")
-    >>>         return bool_to_yesno(infarct_patch.verify_property_plip("infarct", "dissolution of tissue"))
-    >>>     else:
-    >>>         return "no"
-
-    >>> # Does preserved show dissolution of the tissue?
-    >>> def execute_command(image):
-    >>>     image_patch = ImagePatch(image)
-    >>>     preserved_patches = image_patch.find_plip("preserved")
-    >>>     preserved_patch = best_image_match_plip(preserved_patches, "preserved")
-    >>>     return bool_to_yesno(preserved_patch.verify_property_plip("preserved", "dissolution"))
-    """
-    return best_image_match_plip(list_patches, content)
-
-
-def distance(patch_a: ImagePatch, patch_b: ImagePatch) -> float:
-    """
-    Returns the distance between the edges of two ImagePatches. If the patches overlap, it returns a negative distance
-    corresponding to the negative intersection over union.
-
-    Parameters
-    ----------
-    patch_a : ImagePatch
-    patch_b : ImagePatch
-
-    Examples
-    --------
-    >>> # Return the qux that is closest to the foo
-    >>> def execute_command(image):
-    >>>     image_patch = ImagePatch(image)
-    >>>     qux_patches = image_patch.find_plip('qux')
-    >>>     foo_patches = image_patch.find_plip('foo')
-    >>>     foo_patch = best_image_match_plip(foo_patches, "building")
-    >>>     qux_patches.sort(key=lambda x: distance(x, foo_patch))
-    >>>     return qux_patches[0]
-    """
-    return distance(patch_a, patch_b)
 
 
 def bool_to_yesno(bool_answer: bool) -> str:
