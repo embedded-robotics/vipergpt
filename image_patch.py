@@ -127,10 +127,6 @@ class ImagePatch:
 
         self.possible_options = load_json('./useful_lists/possible_options.json')
         
-        # self.nuclei_detector = NucleiExtractor()
-        # self.feats_extractor = DeepFeatureExtractor(architecture='resnet34', patch_size=72, resize_size=224)
-        # self.knn_graph_builder = KNNGraphBuilder(k=5, thresh=50, add_loc_feats=True)
-        
     def forward(self, model_name, *args, **kwargs):
         return forward(model_name, *args, queues=self.queues, **kwargs)
 

@@ -23,6 +23,8 @@ from scipy.ndimage.morphology import binary_fill_holes
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from tqdm import tqdm
+import warnings
+warnings.filterwarnings('ignore')
 
 from ..pipeline import PipelineStep
 from ..utils.image import extract_patches_from_image
@@ -136,9 +138,7 @@ class NucleiExtractor(PipelineStep):
             device=self.device,
         )
 
-        for coords, image_batch in tqdm(
-            image_loader, desc="Patch-level nuclei detection"
-        ):
+        for coords, image_batch in image_loader:
             image_batch = image_batch.to(self.device)
             with torch.no_grad():
                 out = self.model(image_batch).cpu()

@@ -1536,6 +1536,7 @@ class HistocartographyModel(BaseModel):
         self.nuclei_detector = NucleiExtractor()
         self.feats_extractor = DeepFeatureExtractor(architecture='resnet34', patch_size=72, resize_size=224)
         self.knn_graph_builder = KNNGraphBuilder(k=5, thresh=50, add_loc_feats=True)
+
     def forward(self, image):
         # Converting the cropped image into an numpy array
         query_image = np.array(image)
