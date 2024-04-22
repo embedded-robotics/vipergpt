@@ -1013,17 +1013,17 @@ class GPT3Model(BaseModel):
             response_ = []
             for i in range(len(prompts)):
                 if self.model == 'chatgpt':
-                    resp_i = [r['message']['content']
-                              for r in response['choices'][i * self.n_votes:(i + 1) * self.n_votes]]
+                    resp_i = [r.message.content
+                              for r in response.choices[i * self.n_votes:(i + 1) * self.n_votes]]
                 else:
-                    resp_i = [r['text'] for r in response['choices'][i * self.n_votes:(i + 1) * self.n_votes]]
+                    resp_i = [r.message.content for r in response.choices[i * self.n_votes:(i + 1) * self.n_votes]]
                 response_.append(self.most_frequent(resp_i))
             response = response_
         else:
             if self.model == 'chatgpt':
-                response = [r['message']['content'] for r in response['choices']]
+                response = [r.message.content for r in response.choices]
             else:
-                response = [self.process_answer(r["text"]) for r in response['choices']]
+                response = [self.process_answer(r.message.content) for r in response.choices]
         return response
 
     def get_qa_fn(self, prompt):
@@ -1043,7 +1043,7 @@ class GPT3Model(BaseModel):
                    stop=None, top_p=1, frequency_penalty=0, presence_penalty=0):
         if model == "chatgpt":
             messages = [{"role": "user", "content": p} for p in prompt]
-            response = openai.ChatCompletion.create(
+            response = openai.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
                 max_tokens=max_tokens,
@@ -1066,8 +1066,8 @@ class GPT3Model(BaseModel):
         return response
 
     def forward(self, prompt, process_name):
-        if not self.to_batch:
-            prompt = [prompt]
+        # if not self.to_batch:
+        #     prompt = [prompt]
 
         if process_name == 'gpt3_qa':
             # if items in prompt are tuples, then we assume it is a question and context
@@ -1103,8 +1103,8 @@ class GPT3Model(BaseModel):
         else:
             results = response
 
-        if not self.to_batch:
-            results = results[0]
+        # if not self.to_batch:
+        #     results = results[0]
         return results
 
     @classmethod
