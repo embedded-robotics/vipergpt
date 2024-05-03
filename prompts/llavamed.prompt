@@ -11,84 +11,15 @@ class ImagePatch:
 
     Methods
     -------
-    find_histo_patches(self)->list[ImagePatch]
-        If the image is a pathology image, it returns a list of ImagePatch objects containing image crops densely populated with pathology information i.e,. cell nuclei . Otherwise, returns a list with single ImagePatch object containing the original crop.
-    simple_query(question: str=None)->str
-        Returns the answer to a basic question asked about the image. If no question is provided, returns the answer to "What is this?".
-    llm_query(question: str, long_answer: bool)->str
-        References a large language model (e.g., GPT) to produce a response to the given question. Default is short-form answers, can be made long-form responses with the long_answer flag.
-    crop(left: int, lower: int, right: int, upper: int)->ImagePatch
-        Returns a new ImagePatch object containing a crop of the image at the given coordinates.
-    overlaps_with(left: int, lower: int, right: int, upper: int) -> bool:
-        Returns True if a crop with the given coordinates overlaps with this one, else returns False
-    llava_med_query(self, question: str) -> str:
-        Returns the answer to a pathology question asked about the image. The questions are about basic perception, and are not meant to be used for complex reasoning
-        or external knowledge.
-    """
-
-    def __init__(self, image: Union[Image.Image, torch.Tensor, np.ndarray], left: int = None, lower: int = None, right: int = None, upper: int = None):
-        """Initializes an ImagePatch object by cropping the image at the given coordinates and stores the coordinates as
-        attributes. If no coordinates are provided, the image is left unmodified, and the coordinates are set to the
-        dimensions of the image.
-        Parameters
-        -------
-        image : array_like
-            An array-like of the original image.
-        left, lower, right, upper : int
-            An int describing the position of the (left/lower/right/upper) border of the crop's bounding box in the original image.
-        """
-        if left is None and right is None and upper is None and lower is None:
-            self.cropped_image = image
-            self.left = 0
-            self.lower = 0
-            if isinstance(image, Image.Image):
-                self.right = image.size[0]  # width
-                self.upper = image.size[1]  # height
-            else:
-                self.right = image.shape[2]  # width
-                self.upper = image.shape[1]  # height
-        else:
-            if isinstance(image, Image.Image):
-                self.cropped_image = image.crop((left, upper, right, lower))
-            else:
-                self.cropped_image = image[:, image.shape[1]-upper:image.shape[1]-lower, left:right]
-            self.left = left + parent_left
-            self.upper = upper + parent_lower
-            self.right = right + parent_left
-            self.lower = lower + parent_lower
-
-        if isinstance(image, Image.Image):
-            self.height = self.cropped_image.size[1]
-            self.width = self.cropped_image.size[0]
-        else:
-            self.height = self.cropped_image.shape[1]
-            self.width = self.cropped_image.shape[2]
-
-        self.horizontal_center = (self.left + self.right) / 2
-        self.vertical_center = (self.lower + self.upper) / 2
-    
     def find_histo_patches(self) -> list[ImagePatch]:
-        """If the image is a pathology image, return the top three important patches that are densely populated with pathology information.
-        Otherwise, returns a single ImagePatch object containing the original crop.
-        This calls a specialized model for pathology images. It is not a general purpose model and will fail on non-pathology images.
-
+        """Return patches of region of interest where the nucleis are densly populated in the image.
         Returns
         -------
         List[ImagePatch]
             a list of ImagePatch objects containing image crops densely populated with pathology information within the original crop
         """
-        Examples
-        --------
-        >>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     key_patches = image_patch.find_histo_patches()
-        >>>     answers = []
-        >>>     for patch in key_patches:
-        >>>          answers.append(patch.llava_med_query(question))
-        >>>      return image_patch.llm_query(" ".join(answers) + " Please summarize these information.")
 
-    def llava_med_query(self, question: str) -> str:
+    def llava_med_general_query(self, question: str) -> str:
         """Returns the answer to a pathology question asked about the image. 
         The questions are about basic perception, and are not meant to be used for complex reasoning
         or external knowledge.
@@ -98,94 +29,121 @@ class ImagePatch:
             A string describing the question to be asked.
         """
 
-        Examples
-        --------
-        >>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     key_patches = image_patch.find_histo_patches()
-        >>>     answers = []
-        >>>     for patch in key_patches:
-        >>>          answers.append(patch.llava_med_query(question))
-        >>>      return image_patch.llm_query(" ".join(answers) + " Please summarize these information.")
-
-
-    def simple_query(self, question: str = None) -> str:
-        """Returns the answer to a basic question asked about the image. If no question is provided, returns the answer
-        to "What is this?". The questions are about basic perception, and are not meant to be used for complex reasoning
-        or external knowledge.
-        Parameters
-        -------
-        question : str
-            A string describing the question to be asked.
-
-        Examples
-        --------
-        >>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
-        >>> def execute_command(image) -> str:
-        >>>     image_patch = ImagePatch(image)
-        >>>     key_patches = image_patch.find_histo_patches()
-        >>>     answers = []
-        >>>     for patch in key_patches:
-        >>>          answers.append(patch.llava_med_query(question))
-        >>>      return image_patch.llm_query(" ".join(answers) + " Please summarize these information.")
-      
-        return simple_query(self.cropped_image, question)
-
-    def crop(self, left: int, lower: int, right: int, upper: int) -> ImagePatch:
-        """Returns a new ImagePatch cropped from the current ImagePatch.
-        Parameters
-        -------
-        left, lower, right, upper : int
-            The (left/lower/right/upper)most pixel of the cropped image.
-        -------
+    def llava_med_identify_location(self) -> str:
         """
-        return ImagePatch(self.cropped_image, left, lower, right, upper)
-
-    def overlaps_with(self, left, lower, right, upper):
-        """Returns True if a crop with the given coordinates overlaps with this one,
-        else False.
-        Parameters
-        ----------
-        left, lower, right, upper : int
-            the (left/lower/right/upper) border of the crop to be checked
-
-        Returns
+        Determining the specific organ or tissue site under examination. Identifying the type of gland present.
         -------
-        bool
-            True if a crop with the given coordinates overlaps with this one, else False
+        Returns:
+            str: A description of the location within the body.
+        """
 
-        return self.left <= right and self.right >= left and self.lower <= upper and self.upper >= lower
-
-    def llm_query(self, question: str, long_answer: bool = True) -> str:
-        """Answers a text question using GPT-3. The input question is always a formatted string with a variable in it.
-
+    def llava_med_identify_abnormality(self) -> str:
+        """
+        Identify any abnormalities or lesions present. Look for areas of calcification or nodular densities within the soft tissue.
+        -----
+        Returns:
+            str: A description of the abnormality or lesion.
+        """
+    
+    def llava_med_exists(self, object_name: str) -> bool:
+        """Returns True if the object specified by object_name is found in the image, and False otherwise.
         Parameters
-        ----------
-        question: str
-            the text question to ask. Must not contain any reference to 'the image' or 'the photo', etc.
-        long_answer: bool
-            whether to return a short answer or a long answer. Short answers are one or at most two words, very concise.
-            Long answers are longer, and may be paragraphs and explanations. Defalt is True (so long answer).
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        """
 
+    def llava_med_verify_property(self, object_name: str, attribute: str) -> bool:
+        """
+        Returns True if the object possesses the property, and False otherwise.
+        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+        checking whether the object possesses the property.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        attribute : str
+            A string describing the property to be checked.
+        """
 
-        return llm_query(question, long_answer)
-
-
-
-
+    def medical_expert_query(self, question: str, long_answer: bool = True) -> str:
+        """Returns the answer to a pathology question. 
+        """
+        
+    def medical_expert_summarization(self, context: str, long_answer: bool = True) -> str:
+        """Returns the summarization of the given context.
+        """
+       
 def bool_to_yesno(bool_answer: bool) -> str:
-    return "yes" if bool_answer else "no"
+    """Returns a yes/no answer to a question based on the boolean value of bool_answer.
+    Parameters
+    ----------
+    bool_answer : bool
+        a boolean value
 
-
-def coerce_to_numeric(string):
+    Returns
+    -------
+    str
+        a yes/no answer to a question based on the boolean value of bool_answer
     """
-    This function takes a string as input and returns a float after removing any non-numeric characters.
-    If the input string contains a range (e.g. "10-15"), it returns the first value in the range.
-    """
-    return coerce_to_numeric(string)
 
-Write a function using Python and the ImagePatch class (above) that could be executed to provide an answer to the query.
+Examples
+--------
+>>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>          answers.append(patch.medical_expert_query("what are positively charged, thus allowing the compaction of the negatively charged dna"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(answers)
+
+--------
+>>> # does the subcutaneous tissue show masses or nodules of calcium salt surrounded by foreign body giant cells?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>          if patch.llava_med_exists("subcutaneous tissue") and patch.llava_med_verify_property("subcutaneous", "masses or nodules of calcium salt surrounded by foreign body giant cells"):
+>>>             return "yes"
+>>>      return "no"
+
+--------
+
+>>> # what does the mucosa in the infarcted area show?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     # get basic information
+>>>     location = image_patch.llava_med_identify_location()
+>>>     abnormalities = image_patch.llava_med_identify_abnormality()
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>            if patch.llava_med_exists("infarcted area):
+>>>                 answers.append(patch.llava_med_general_query("what does the mucosa show?"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(location + abnormalities + answers)
+
+--------
+>>> # What shows complete replacement of virtually all glomeruli by blue-staining collagen?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     # get basic information
+>>>     location = image_patch.llava_med_identify_location()
+>>>     abnormalities = image_patch.llava_med_identify_abnormality()
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>            if patch.llava_med_exists("infarcted area"):
+>>>                 answers.append(patch.llava_med_general_query("What shows complete replacement of virtually all glomeruli by blue-staining collagen?"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(location + abnormalities + answers)
+
+You're a pathologist. Write a function using Python and the ImagePatch class (above) that could be executed to provide an answer to the query.
 
 Consider the following guidelines:
 - Use base Python (comparison, sorting) for basic logical operations, left/right/up/down, math, etc.

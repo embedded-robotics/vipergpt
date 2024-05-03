@@ -1541,7 +1541,8 @@ class HistocartographyModel(BaseModel):
         # Converting the cropped image into an numpy array
         query_image = np.array(image)
         nuclei_map, nuclei_centers = self.nuclei_detector.process(query_image)
-        
+        width, height = image.size
+
         # Only consider if more than 5 nuclei are detected since knn needs to form a graph using 5 neighbors.
         # If less than 5 nuclei are present, most of the images are not pathology related
         if nuclei_centers.shape[0] > 5:
@@ -1552,7 +1553,6 @@ class HistocartographyModel(BaseModel):
             cell_graph = self.knn_graph_builder.process(nuclei_map, features)
             
             # Make calculations to extract patches and the overlap images
-            width, height = image.size
             width_range = np.linspace(0, width, 4, dtype=int)
             height_range = np.linspace(0, height, 4, dtype=int)
 
