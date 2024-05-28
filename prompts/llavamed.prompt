@@ -1,0 +1,153 @@
+import math
+
+class ImagePatch:
+    """A Python class containing a crop of an image centered around a particular object, as well as relevant information.
+    Attributes
+    ----------
+    cropped_image : array_like
+        An array-like of the cropped image taken from the original image.
+    left, lower, right, upper : int
+        An int describing the position of the (left/lower/right/upper) border of the crop's bounding box in the original image.
+
+    Methods
+    -------
+    def find_histo_patches(self) -> list[ImagePatch]:
+        """Return patches of region of interest where the nucleis are densly populated in the image.
+        Returns
+        -------
+        List[ImagePatch]
+            a list of ImagePatch objects containing image crops densely populated with pathology information within the original crop
+        """
+
+    def llava_med_general_query(self, question: str) -> str:
+        """Returns the answer to a pathology question asked about the image. 
+        The questions are about basic perception, and are not meant to be used for complex reasoning
+        or external knowledge.
+        Parameters
+        -------
+        question : str
+            A string describing the question to be asked.
+        """
+
+    def llava_med_identify_location(self) -> str:
+        """
+        Determining the specific organ or tissue site under examination. Identifying the type of gland present.
+        -------
+        Returns:
+            str: A description of the location within the body.
+        """
+
+    def llava_med_identify_abnormality(self) -> str:
+        """
+        Identify any abnormalities or lesions present. Look for areas of calcification or nodular densities within the soft tissue.
+        -----
+        Returns:
+            str: A description of the abnormality or lesion.
+        """
+    
+    def llava_med_exists(self, object_name: str) -> bool:
+        """Returns True if the object specified by object_name is found in the image, and False otherwise.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        """
+
+    def llava_med_verify_property(self, object_name: str, attribute: str) -> bool:
+        """
+        Returns True if the object possesses the property, and False otherwise.
+        Differs from 'exists' in that it presupposes the existence of the object specified by object_name, instead
+        checking whether the object possesses the property.
+        This calls a specialized model for pathology images. It is not a general purpose model and will fail on
+        non-pathology images.
+        Parameters
+        -------
+        object_name : str
+            A string describing the name of the object to be found in the image.
+        attribute : str
+            A string describing the property to be checked.
+        """
+
+    def medical_expert_query(self, question: str, long_answer: bool = True) -> str:
+        """Returns the answer to a pathology question. 
+        """
+        
+    def medical_expert_summarization(self, context: str, long_answer: bool = True) -> str:
+        """Returns the summarization of the given context.
+        """
+       
+def bool_to_yesno(bool_answer: bool) -> str:
+    """Returns a yes/no answer to a question based on the boolean value of bool_answer.
+    Parameters
+    ----------
+    bool_answer : bool
+        a boolean value
+
+    Returns
+    -------
+    str
+        a yes/no answer to a question based on the boolean value of bool_answer
+    """
+
+Examples
+--------
+>>> # what are positively charged, thus allowing the compaction of the negatively charged dna?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>          answers.append(patch.medical_expert_query("what are positively charged, thus allowing the compaction of the negatively charged dna"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(answers)
+
+--------
+>>> # does the subcutaneous tissue show masses or nodules of calcium salt surrounded by foreign body giant cells?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>          if patch.llava_med_exists("subcutaneous tissue") and patch.llava_med_verify_property("subcutaneous", "masses or nodules of calcium salt surrounded by foreign body giant cells"):
+>>>             return "yes"
+>>>      return "no"
+
+--------
+
+>>> # what does the mucosa in the infarcted area show?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     # get basic information
+>>>     location = image_patch.llava_med_identify_location()
+>>>     abnormalities = image_patch.llava_med_identify_abnormality()
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>            if patch.llava_med_exists("infarcted area):
+>>>                 answers.append(patch.llava_med_general_query("what does the mucosa show?"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(location + abnormalities + answers)
+
+--------
+>>> # What shows complete replacement of virtually all glomeruli by blue-staining collagen?
+>>> def execute_command(image) -> str:
+>>>     image_patch = ImagePatch(image)
+>>>     # get basic information
+>>>     location = image_patch.llava_med_identify_location()
+>>>     abnormalities = image_patch.llava_med_identify_abnormality()
+>>>     key_patches = image_patch.find_histo_patches()
+>>>     answers = []
+>>>     for patch in key_patches:
+>>>            if patch.llava_med_exists("infarcted area"):
+>>>                 answers.append(patch.llava_med_general_query("What shows complete replacement of virtually all glomeruli by blue-staining collagen?"))
+>>>      answers = "".join(answers)
+>>>      return image_patch.medical_expert_summarization(location + abnormalities + answers)
+
+You're a pathologist. Write a function using Python and the ImagePatch class (above) that could be executed to provide an answer to the query.
+
+Consider the following guidelines:
+- Use base Python (comparison, sorting) for basic logical operations, left/right/up/down, math, etc.
+- Use the llm_query function to access external information and answer informational questions not concerning the image.
+- The function should take image from ImagePatch class into account while answering the query
+
+Query: INSERT_QUERY_HERE

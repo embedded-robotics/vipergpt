@@ -1013,17 +1013,17 @@ class GPT3Model(BaseModel):
             response_ = []
             for i in range(len(prompts)):
                 if self.model == 'chatgpt':
-                    resp_i = [r['message']['content']
-                              for r in response['choices'][i * self.n_votes:(i + 1) * self.n_votes]]
+                    resp_i = [r.message.content
+                              for r in response.choices[i * self.n_votes:(i + 1) * self.n_votes]]
                 else:
-                    resp_i = [r['text'] for r in response['choices'][i * self.n_votes:(i + 1) * self.n_votes]]
+                    resp_i = [r.message.content for r in response.choices[i * self.n_votes:(i + 1) * self.n_votes]]
                 response_.append(self.most_frequent(resp_i))
             response = response_
         else:
             if self.model == 'chatgpt':
-                response = [r['message']['content'] for r in response['choices']]
+                response = [r.message.content for r in response.choices]
             else:
-                response = [self.process_answer(r["text"]) for r in response['choices']]
+                response = [self.process_answer(r.message.content) for r in response.choices]
         return response
 
     def get_qa_fn(self, prompt):
@@ -1043,7 +1043,7 @@ class GPT3Model(BaseModel):
                    stop=None, top_p=1, frequency_penalty=0, presence_penalty=0):
         if model == "chatgpt":
             messages = [{"role": "user", "content": p} for p in prompt]
-            response = openai.ChatCompletion.create(
+            response = openai.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
                 max_tokens=max_tokens,
@@ -1066,8 +1066,8 @@ class GPT3Model(BaseModel):
         return response
 
     def forward(self, prompt, process_name):
-        if not self.to_batch:
-            prompt = [prompt]
+        # if not self.to_batch:
+        #     prompt = [prompt]
 
         if process_name == 'gpt3_qa':
             # if items in prompt are tuples, then we assume it is a question and context
@@ -1103,8 +1103,8 @@ class GPT3Model(BaseModel):
         else:
             results = response
 
-        if not self.to_batch:
-            results = results[0]
+        # if not self.to_batch:
+        #     results = results[0]
         return results
 
     @classmethod
@@ -1536,11 +1536,13 @@ class HistocartographyModel(BaseModel):
         self.nuclei_detector = NucleiExtractor()
         self.feats_extractor = DeepFeatureExtractor(architecture='resnet34', patch_size=72, resize_size=224)
         self.knn_graph_builder = KNNGraphBuilder(k=5, thresh=50, add_loc_feats=True)
+
     def forward(self, image):
         # Converting the cropped image into an numpy array
         query_image = np.array(image)
         nuclei_map, nuclei_centers = self.nuclei_detector.process(query_image)
-        
+        width, height = image.size
+
         # Only consider if more than 5 nuclei are detected since knn needs to form a graph using 5 neighbors.
         # If less than 5 nuclei are present, most of the images are not pathology related
         if nuclei_centers.shape[0] > 5:
@@ -1551,7 +1553,6 @@ class HistocartographyModel(BaseModel):
             cell_graph = self.knn_graph_builder.process(nuclei_map, features)
             
             # Make calculations to extract patches and the overlap images
-            width, height = image.size
             width_range = np.linspace(0, width, 4, dtype=int)
             height_range = np.linspace(0, height, 4, dtype=int)
 
