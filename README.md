@@ -1,6 +1,8 @@
 # ViperGPT: Visual Inference via Python Execution for Reasoning
 
-This is the code for the paper [ViperGPT: Visual Inference via Python Execution for Reasoning](https://viper.cs.columbia.edu) by [Dídac Surís](https://www.didacsuris.com/)\*, [Sachit Menon](https://sachit-menon.github.io/)\* and [Carl Vondrick](https://www.cs.columbia.edu/~vondrick/).
+This repo deals with the integration of HistoCartography and LLaVA-Med with the ViperGPT. The configuration for the implementaion of HistoCartography and LLaVA-Med can be found in an accompanying repository [Path-RAG: Knowledge-Guided Key Region Retrieval for Open-ended Pathology Visual Question Answering](https://github.com/embedded-robotics/path-rag).
+
+The following details apply to ViperGPT as described in the paper [ViperGPT: Visual Inference via Python Execution for Reasoning](https://viper.cs.columbia.edu) by [Dídac Surís](https://www.didacsuris.com/)\*, [Sachit Menon](https://sachit-menon.github.io/)\* and [Carl Vondrick](https://www.cs.columbia.edu/~vondrick/).
 
 ![teaser](teaser.gif "Teaser")
 
